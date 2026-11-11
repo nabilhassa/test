@@ -86,8 +86,53 @@ One landing page that keeps **the same sections as the old Carrd site**, in the 
 
 Button: **Start Project** → opens the booking flow (see 2.6)
 
-### 2.6 Booking flow (Start Project)
-_Waiting for screenshots: the 15 questions → choose a call slot → contact details._
+### 2.6 Booking flow (Start Project): "MNH XMotion — Project Brief"
+Currently a separate Tally form (tally.so). It shows a progress bar, one section per screen, and Back / Next buttons. Required questions are marked *.
+
+**Intro:** "Start your project with MNH XMotion. Answer a few questions about your project and creative direction. This helps us understand what you're aiming for and how to elevate your visuals. The form takes around 2–3 minutes, and you can book a video call at the end to discuss your project whenever it suits you." → [Let's start]
+
+**Screen 1: About you**
+1. What best describes you?* (choose one): Business / Brand · Content Creator
+
+**Screen 2: Service Selection**
+2. Which service do you need?* (choose one): Storytelling Hooks & Trailers · Content Management · Ads Creation · Not sure yet / need guidance
+
+**Screen 3: Project Details**
+3. What is the main purpose of this project?* (select all that apply): Define or elevate brand identity · Editing an existing concept or project · Upgrade overall production quality · Improve storytelling and script writing · Not fully defined yet · Other
+4. Where will the video be published?*: Instagram · Facebook · YouTube · Website · TikTok · Other
+5. What's your project timeline?* (choose one): Urgent (needed in 7 days) · Standard (14+ days is fine) · Flexible (2+ months) · Not sure yet
+
+**Screen 4: Creative Direction**
+6. What visual style best fits your project?* (up to 3): Cinematic & storytelling-driven · Clean & minimal · Fast-paced & dynamic · Motion graphics focused · VFX / 3D heavy · Other
+7. Do you already have footage or assets available?* (choose one): Yes, everything is ready · Partially (some footage or assets) · No, starting from scratch
+8. How complex should the visuals be?* ("Higher complexity usually requires more production time and budget."):
+   - Essential: clean cuts, strong pacing, basic motion graphics
+   - Enhanced: cinematic edits, layered motion graphics, light VFX
+   - Advanced: custom motion design, 3D elements, detailed VFX
+   - High-End: fully cinematic, 3D-heavy, VFX-driven production
+
+**Screen 5: Budget, Scope & Logistics**
+9. What's your budget range for this project?*: €500–€1,000 · €1,000–€3,000 · €3,000–€10,000 · €10,000+ · Not sure yet
+10. Will this be a one-time project or ongoing editing support?*: One project · Monthly · Undecided · Other
+11. Who will be involved in the decision-making process?* (select all that apply): Just me · Marketing team · Other
+12. Anything else we should know about? (free text, optional)
+13. How did you hear about us?* (dropdown, *options still to be confirmed*)
+
+**Screen 6: Schedule Your Call** ("Video calls help us review visuals and align faster.")
+14. How would you prefer to have this call?*: 🎥 Video call (recommended) · 📞 Phone call
+15. Which day(s) work best for you?*: Monday … Sunday (multiple)
+16. What time window do you prefer?*: Morning (9:00–12:00) · Early afternoon (12:00–15:00) · Late afternoon (15:00–18:00) · Flexible
+
+"We'll review your project brief and confirm the exact call time by email. Calls are usually scheduled within 1–2 business days."
+
+**Screen 7: Personal information**
+- About you*: Full Name · Email · Phone
+- About your Social Media*: Creator name or brand name · Main platform · Profile link or @handle
+- ☐ I agree that MNH XMotion may use my information to contact me about this project.*
+
+**Typos to fix in the new version:** "Instgram" → Instagram, "a existing" → an existing, "Please select an options" → Please select one option.
+
+**Important:** the old flow does **not** book a real calendar slot. The client picks preferred days and a time window, and you confirm the time by email. Whether to keep this or switch to live booking is decided in step 3.
 
 ### 2.7 Contact: "Have Questions? Get in Touch."
 "If you have questions or want to discuss your project before filling the form, reach out anytime."

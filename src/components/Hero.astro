@@ -1,0 +1,190 @@
+---
+import { Image } from 'astro:assets';
+import eye from '../assets/xmotion-eye.jpg';
+import { content } from '../data/site';
+const h = content.hero;
+---
+
+<section class="hero" id="top">
+  <div class="media" aria-hidden="true">
+    <Image
+      src={eye}
+      alt=""
+      widths={[640, 960, 1280, 1792]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="eye"
+      data-parallax
+    />
+    <div class="shade"></div>
+  </div>
+
+  <!-- Camera viewfinder frame, from the logo artwork -->
+  <div class="viewfinder" aria-hidden="true">
+    <span class="c tl"></span><span class="c tr"></span><span class="c bl"></span><span class="c br"></span>
+    <div class="rec"><i></i> REC <time data-timecode>00:00:00:00</time></div>
+    <div class="batt"><i></i><i></i><i></i><i></i></div>
+  </div>
+
+  <div class="content">
+    <p class="kicker reveal">{h.eyebrow}</p>
+    <h1 class="display reveal" style="--d:.1s">
+      <span class="l1">{h.title[0]}</span>
+      <span class="l2 grad-text">{h.title[1]}</span>
+    </h1>
+    <p class="lead reveal" style="--d:.2s">{h.lead}</p>
+    <p class="sub reveal" style="--d:.28s">{h.sub}</p>
+    <div class="actions reveal" style="--d:.36s">
+      <a href="#start" class="btn btn-primary">
+        {h.cta}
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#work" class="btn btn-ghost">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        {h.secondary}
+      </a>
+    </div>
+    <ul class="tags reveal" style="--d:.44s" aria-label="Our toolkit">
+      {h.tags.map((t) => <li class="node-tag">{t}</li>)}
+    </ul>
+  </div>
+
+  <a href="#services" class="scroll-cue" aria-label="Scroll down"><span></span></a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    isolation: isolate;
+    padding: 120px 0 clamp(70px, 10vh, 120px);
+  }
+  .media { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+  .eye {
+    width: 100%;
+    height: 115%;
+    object-fit: cover;
+    object-position: 50% 42%;
+    transform-origin: 50% 40%;
+    animation: breathe 18s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  @keyframes breathe { from { scale: 1.04; } to { scale: 1.12; } }
+  .shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(6,6,15,.92) 0%, rgba(6,6,15,.55) 38%, rgba(6,6,15,.1) 70%),
+      linear-gradient(0deg, var(--bg) 0%, rgba(6,6,15,.4) 30%, transparent 55%),
+      linear-gradient(180deg, rgba(6,6,15,.7) 0%, transparent 18%);
+  }
+
+  .viewfinder { position: absolute; inset: 96px clamp(16px, 3vw, 40px) 28px; pointer-events: none; z-index: 1; }
+  .c { position: absolute; width: clamp(28px, 4vw, 54px); height: clamp(28px, 4vw, 54px); border: 1.5px solid rgba(255,255,255,.35); }
+  .tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+  .tr { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+  .bl { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+  .br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+  .rec { position: absolute; top: 14px; left: 18px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; letter-spacing: .14em; color: rgba(255,255,255,.7); font-variant-numeric: tabular-nums; }
+  .rec i { width: 10px; height: 10px; border-radius: 50%; background: #ff2d2d; box-shadow: 0 0 10px #ff2d2d; animation: blink 1.2s steps(2) infinite; }
+  .rec time { opacity: .65; margin-inline-start: 6px; }
+  @keyframes blink { 50% { opacity: .15; } }
+  .batt { position: absolute; top: 16px; right: 18px; display: flex; gap: 2px; padding: 3px; border: 1.5px solid rgba(255,255,255,.4); border-radius: 3px; }
+  .batt::after { content: ''; position: absolute; right: -5px; top: 4px; width: 3px; height: 6px; background: rgba(255,255,255,.4); border-radius: 0 2px 2px 0; }
+  .batt i { width: 5px; height: 8px; background: rgba(255,255,255,.55); }
+
+  .content {
+    position: relative;
+    z-index: 2;
+    width: min(1320px, 100% - 2 * var(--gutter));
+    margin-inline: auto;
+    padding-inline: clamp(0px, 3vw, 40px);
+  }
+  .display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: .92;
+    margin: 0 0 28px;
+    letter-spacing: .02em;
+  }
+  .display span { display: block; }
+  .l1 { font-size: clamp(30px, 5vw, 64px); letter-spacing: .32em; color: rgba(243,241,250,.9); font-weight: 500; }
+  .l2 { font-size: clamp(56px, 12vw, 168px); filter: drop-shadow(0 0 30px rgba(255,122,47,.35)); padding-bottom: .06em; }
+  .lead { font-size: clamp(19px, 2.1vw, 25px); font-weight: 600; max-width: 620px; margin: 0 0 10px; line-height: 1.45; }
+  .sub { color: #c9c6dc; max-width: 560px; margin: 0 0 36px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 36px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 0; padding: 0; }
+  .tags li:nth-child(even) { border-color: rgba(34,211,197,.6); color: #bff6f1; }
+
+  .scroll-cue { position: absolute; bottom: 44px; left: 50%; translate: -50% 0; width: 26px; height: 42px; border: 1.5px solid rgba(255,255,255,.35); border-radius: 14px; z-index: 2; }
+  .scroll-cue span { position: absolute; top: 8px; left: 50%; width: 3px; height: 8px; margin-left: -1.5px; border-radius: 2px; background: var(--copper); animation: cue 2s var(--ease) infinite; }
+  @keyframes cue { 0% { opacity: 0; transform: translateY(0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
+
+  /* Large screens: put the eye on the right so the monogram is not behind the title */
+  @media (min-width: 1100px) {
+    .media { inset-inline-start: 34%; }
+    .shade {
+      background:
+        linear-gradient(90deg, var(--bg) 0%, rgba(6,6,15,.6) 18%, transparent 45%),
+        linear-gradient(0deg, var(--bg) 0%, transparent 30%),
+        linear-gradient(180deg, rgba(6,6,15,.7) 0%, transparent 18%);
+    }
+    html[dir='rtl'] .media { inset-inline-start: 0; inset-inline-end: 34%; }
+    html[dir='rtl'] .shade { scale: -1 1; }
+    .l2 { font-size: clamp(56px, 9.5vw, 150px); }
+  }
+
+  /* Phones: show the whole eye on top, text below on a dark background */
+  @media (max-width: 760px) {
+    .hero { display: block; min-height: auto; padding: 76px 0 72px; }
+    .media { position: relative; inset: auto; height: 64svh; min-height: 420px; overflow: hidden; }
+    .eye { height: 100%; object-position: 50% 45%; animation-duration: 24s; }
+    .shade {
+      background:
+        linear-gradient(0deg, var(--bg) 0%, rgba(6,6,15,.4) 22%, transparent 45%),
+        linear-gradient(180deg, rgba(6,6,15,.6) 0%, transparent 14%);
+    }
+    .viewfinder { inset: 90px 12px auto; height: calc(64svh - 40px); min-height: 380px; }
+    .rec time { display: none; }
+    .content { margin-top: -56px; }
+    .scroll-cue { display: none; }
+    .actions .btn { flex: 1 1 auto; }
+  }
+</style>
+
+<script>
+  // Running timecode in the viewfinder (HH:MM:SS:FF at 24 fps)
+  const tc = document.querySelector('[data-timecode]');
+  if (tc) {
+    const start = performance.now();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const tick = () => {
+      const t = (performance.now() - start) / 1000;
+      const f = Math.floor((t % 1) * 24);
+      const s = Math.floor(t) % 60;
+      const m = Math.floor(t / 60) % 60;
+      const h = Math.floor(t / 3600);
+      tc.textContent = `${pad(h)}:${pad(m)}:${pad(s)}:${pad(f)}`;
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // Gentle parallax on the key visual
+  const img = document.querySelector<HTMLElement>('[data-parallax]');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (img && !reduce) {
+    window.addEventListener(
+      'scroll',
+      () => {
+        const y = Math.min(window.scrollY, window.innerHeight);
+        img.style.transform = `translateY(${y * 0.25}px)`;
+      },
+      { passive: true },
+    );
+  }
+</script>

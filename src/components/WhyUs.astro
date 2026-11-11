@@ -1,0 +1,50 @@
+---
+import { content } from '../data/site';
+const w = content.why;
+---
+
+<section class="section why" id="why">
+  <div class="orb" aria-hidden="true"></div>
+  <div class="wrap inner">
+    <p class="kicker reveal">{w.kicker}</p>
+    <p class="statement reveal" style="--d:.08s">
+      {w.statement.map((p) => (p.hl ? <span class="grad-text">{p.t}</span> : p.t))}
+    </p>
+    <p class="text reveal" style="--d:.16s">{w.text}</p>
+    <ul class="pillars">
+      {w.pillars.map((p, i) => (
+        <li class="reveal" style={`--d:${0.2 + i * 0.08}s`}>
+          <span class="k">{p.k}</span>
+          <span class="t">{p.t}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .why { position: relative; overflow: hidden; isolation: isolate; border-block: 1px solid var(--line); background: linear-gradient(180deg, var(--bg), var(--bg-2) 50%, var(--bg)); }
+  .orb {
+    position: absolute; z-index: -1;
+    width: 900px; height: 900px; max-width: 160vw; max-height: 160vw;
+    top: 50%; left: 50%; translate: -50% -50%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, transparent 38%, rgba(255,122,47,.10) 48%, transparent 58%),
+      conic-gradient(from 0deg, rgba(34,211,197,.18), rgba(214,59,168,.16), rgba(255,122,47,.2), rgba(107,63,160,.16), rgba(34,211,197,.18));
+    filter: blur(60px);
+    opacity: .6;
+    animation: spin 40s linear infinite;
+  }
+  @keyframes spin { to { rotate: 360deg; } }
+  .inner { text-align: center; max-width: 960px; }
+  .kicker { justify-content: center; }
+  .statement { font-family: var(--font-display); font-weight: 700; font-size: clamp(36px, 6.4vw, 84px); line-height: 1.05; margin: 0 0 32px; text-wrap: balance; }
+  html[lang='ar'] .statement { font-family: var(--font-ar); }
+  .text { font-size: clamp(17px, 1.6vw, 20px); color: #cfcce0; max-width: 780px; margin: 0 auto 56px; }
+  .pillars { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .pillars li { padding: 22px 18px; border: 1px solid var(--line); border-radius: 14px; background: rgba(14,15,30,.6); backdrop-filter: blur(6px); display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .k { font-family: var(--font-display); color: var(--teal); font-size: 14px; letter-spacing: .14em; }
+  .t { font-weight: 700; }
+  @media (max-width: 860px) { .pillars { grid-template-columns: repeat(2, 1fr); } }
+</style>

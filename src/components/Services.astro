@@ -1,0 +1,76 @@
+---
+import { content } from '../data/site';
+const s = content.services;
+const icons: Record<string, string> = {
+  hooks: '<rect x="3" y="5" width="13" height="14" rx="2"/><path d="M8 9.5v5l4-2.5z" fill="currentColor"/><path d="M5 5v14M14 5v14" stroke-dasharray="1.5 2.5"/><path d="M19 8h2M19 12h2M19 16h2"/>',
+  content: '<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 11h6M9 14h6M9 17h4"/>',
+  ads: '<path d="M3 10v4h3l6 4V6L6 10z"/><path d="M15 9a4 4 0 0 1 0 6M17.5 6.5a7.5 7.5 0 0 1 0 11"/>',
+};
+---
+
+<section class="section space" id="services">
+  <div class="wrap">
+    <p class="kicker reveal">{s.kicker}</p>
+    <h2 class="h2 reveal" style="--d:.08s">{s.title}</h2>
+
+    <div class="grid">
+      {s.items.map((it, i) => (
+        <article class="card reveal" style={`--d:${0.12 + i * 0.1}s`}>
+          <div class="glow" aria-hidden="true"></div>
+          <div class="num" aria-hidden="true">0{i + 1}</div>
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={icons[it.icon]} />
+          </div>
+          <h3>{it.title}</h3>
+          <p>{it.text}</p>
+          <ul class="chips">
+            {it.chips.map((c) => <li class="node-tag">{c}</li>)}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 56px; }
+  .card {
+    position: relative;
+    overflow: hidden;
+    padding: 36px 30px 32px;
+    border-radius: var(--radius);
+    background: linear-gradient(160deg, rgba(20,21,41,.9), rgba(10,10,22,.9));
+    border: 1px solid var(--line);
+    transition: transform .6s var(--ease), border-color .5s, box-shadow .6s var(--ease);
+  }
+  .card:hover { transform: translateY(-8px); border-color: var(--line-strong); box-shadow: 0 30px 60px -30px rgba(255,122,47,.45); }
+  .glow {
+    position: absolute;
+    inset: -40% -20% auto auto;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(255,122,47,.35), rgba(214,59,168,.12) 45%, transparent 70%);
+    filter: blur(10px);
+    opacity: .55;
+    transition: opacity .6s, transform .8s var(--ease);
+    pointer-events: none;
+  }
+  .card:nth-child(2) .glow { background: radial-gradient(circle, rgba(34,211,197,.32), rgba(107,63,160,.14) 45%, transparent 70%); }
+  .card:hover .glow { opacity: 1; transform: scale(1.15); }
+  .num { position: absolute; top: 22px; right: 26px; font-family: var(--font-display); font-size: 15px; color: var(--muted); letter-spacing: .1em; }
+  html[dir='rtl'] .num { right: auto; left: 26px; }
+  .icon {
+    width: 66px; height: 66px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    color: var(--copper-light);
+    background: radial-gradient(circle at 35% 30%, #2a1a12, #0c0a12 70%);
+    box-shadow: 0 0 0 1px rgba(255,140,70,.35), 0 0 34px -4px rgba(255,122,47,.55);
+    margin-bottom: 26px;
+  }
+  .icon svg { width: 30px; height: 30px; }
+  h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.25; margin: 0 0 14px; }
+  html[lang='ar'] h3 { font-family: var(--font-ar); }
+  p { color: #c3c0d6; font-size: 15.5px; margin: 0 0 24px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr; max-width: 640px; } }
+</style>

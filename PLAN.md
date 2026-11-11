@@ -242,7 +242,7 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 
 | Phase | What gets built | Needs from you |
 |-------|-----------------|----------------|
-| **1. Foundation** | Astro project, colors/fonts, all 8 sections with the old texts (EN), placeholder videos, mobile layout | Nothing, can start now |
+| ✅ **1. Foundation** | Astro project, colors/fonts, all 8 sections with the old texts (EN), placeholder videos, mobile layout | Nothing, can start now |
 | **2. Cinematic layer** | 3D glowing logo sphere, scroll and title animations, hover glows, film grain, showreel hero | Logo file, showreel clip (placeholders until then) |
 | **3. Project brief + booking** | Multi-step form (16 questions → personal info → Cal.com slot), emails to you and the client, WhatsApp button | Cal.com + Resend accounts (I'll guide you) |
 | **4. Languages** | German and Arabic versions (Arabic right-to-left), working language switch | You review the translations |
@@ -261,7 +261,7 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
   - Video 3: `1fRhCTF7WAAvuTV26DklBP1dLjK6EqQna`
   - Video 4: `1hSVQLBo1BGQez0R5ZzYjoLiaM_PGhgOI`
   - Until Bunny Stream is set up, the site embeds them via `https://drive.google.com/file/d/<ID>/preview` (sharing must be "Anyone with the link")
-  - [ ] Category + title for each video
+  - [x] Categories: any order is fine (split across VFX / Cinematic / Motion; titles "Project 01–04" for now)
 - [ ] Instagram link / handle (+ other socials?)
 - [ ] Options of "How did you hear about us?"
 - [ ] Name and postal address for the Impressum

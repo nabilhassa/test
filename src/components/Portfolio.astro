@@ -1,0 +1,168 @@
+---
+import { content, portfolio } from '../data/site';
+const w = content.work;
+const cats = Object.entries(w.categories) as [keyof typeof w.categories, string][];
+---
+
+<section class="section space" id="work">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="kicker reveal">{w.kicker}</p>
+        <h2 class="h2 reveal" style="--d:.08s">{w.title}</h2>
+      </div>
+      <div class="tabs reveal" style="--d:.14s" role="tablist" aria-label="Filter by category">
+        <button role="tab" aria-selected="true" data-filter="all">{w.all}</button>
+        {cats.map(([key, label]) => <button role="tab" aria-selected="false" data-filter={key}>{label}</button>)}
+      </div>
+    </div>
+
+    <ul class="grid" data-grid>
+      {portfolio.map((v, i) => (
+        <li class="item reveal" style={`--d:${0.1 + (i % 3) * 0.08}s`} data-cat={v.category}>
+          <button class="tile" data-video={v.id} data-title={v.title} aria-label={`${w.play}: ${v.title}`}>
+            <span class="thumb" aria-hidden="true">
+              <img
+                src={`https://drive.google.com/thumbnail?id=${v.id}&sz=w1000`}
+                alt=""
+                loading="lazy"
+                referrerpolicy="no-referrer"
+                onerror="this.remove()"
+              />
+              <span class="fallback">
+                <svg viewBox="0 0 64 64"><path d="M14 50V16l18 14 18-14v34M22 50V30M42 50 26 36" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
+              </span>
+            </span>
+            <span class="vf" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="play" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+            </span>
+            <span class="meta">
+              <span class="node-tag">{w.categories[v.category]}</span>
+              <span class="title">{v.title}</span>
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <dialog class="player" data-player aria-label="Video player">
+    <div class="frame">
+      <button class="close" data-close aria-label={w.close}>
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="ratio"><iframe data-iframe title="Video" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+    </div>
+  </dialog>
+</section>
+
+<style>
+  .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; flex-wrap: wrap; }
+  .head .h2 { margin-bottom: 0; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px; border-radius: 999px; border: 1px solid var(--line); background: rgba(14,15,30,.7); }
+  .tabs button { border: 0; background: transparent; padding: 10px 18px; border-radius: 999px; font-size: 14px; font-weight: 600; color: var(--muted); transition: background .35s, color .35s; min-height: 42px; }
+  .tabs button:hover { color: var(--text); }
+  .tabs button[aria-selected='true'] { background: linear-gradient(110deg, var(--copper-light), var(--copper)); color: #160a03; }
+
+  .grid { list-style: none; padding: 0; margin: 48px 0 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+  .item[hidden] { display: none; }
+  .tile {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--panel);
+    text-align: start;
+    transition: border-color .5s, transform .6s var(--ease), box-shadow .6s var(--ease);
+  }
+  .tile:hover { border-color: var(--line-strong); transform: translateY(-6px); box-shadow: 0 30px 60px -28px rgba(255,122,47,.5); }
+  .thumb { position: absolute; inset: 0; }
+  .thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; transition: transform 1.2s var(--ease), filter .6s; filter: saturate(.9) brightness(.8); }
+  .tile:hover .thumb img { transform: scale(1.06); filter: saturate(1.1) brightness(.95); }
+  .fallback {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(34,211,197,.22), transparent 45%),
+      radial-gradient(circle at 70% 60%, rgba(255,122,47,.28), transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(214,59,168,.18), transparent 60%),
+      #0a0a17;
+    color: rgba(255,178,122,.55);
+  }
+  .fallback svg { width: 30%; max-width: 160px; filter: drop-shadow(0 0 18px rgba(255,122,47,.5)); }
+  .thumb::after { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(0deg, rgba(6,6,15,.92), transparent 55%); }
+
+  .vf i { position: absolute; z-index: 3; width: 22px; height: 22px; border: 1.5px solid rgba(255,255,255,.45); transition: inset .5s var(--ease); }
+  .vf i:nth-child(1) { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+  .vf i:nth-child(2) { top: 14px; right: 14px; border-left: 0; border-bottom: 0; }
+  .vf i:nth-child(3) { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
+  .vf i:nth-child(4) { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+  .tile:hover .vf i:nth-child(1) { top: 22px; left: 22px; }
+  .tile:hover .vf i:nth-child(2) { top: 22px; right: 22px; }
+  .tile:hover .vf i:nth-child(3) { bottom: 22px; left: 22px; }
+  .tile:hover .vf i:nth-child(4) { bottom: 22px; right: 22px; }
+
+  .play {
+    position: absolute; z-index: 3; top: 50%; left: 50%; translate: -50% -50%;
+    width: 76px; height: 76px; border-radius: 50%;
+    display: grid; place-items: center;
+    border: 1.5px solid rgba(255,255,255,.6);
+    background: rgba(6,6,15,.35);
+    backdrop-filter: blur(6px);
+    transition: transform .5s var(--ease), background .5s, border-color .5s;
+  }
+  .play svg { width: 26px; height: 26px; margin-left: 4px; }
+  .tile:hover .play { transform: scale(1.12); background: var(--copper); border-color: var(--copper); color: #160a03; }
+  .meta { position: absolute; z-index: 3; left: 24px; right: 24px; bottom: 22px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .title { font-family: var(--font-display); font-size: 22px; font-weight: 700; }
+
+  .player { width: min(1100px, 94vw); max-height: 92vh; padding: 0; border: 0; background: transparent; color: var(--text); overflow: visible; }
+  .player::backdrop { background: rgba(3,3,8,.88); backdrop-filter: blur(8px); }
+  .frame { position: relative; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line-strong); box-shadow: 0 0 80px -10px rgba(255,122,47,.4); background: #000; }
+  .ratio { aspect-ratio: 16 / 9; max-height: 86vh; }
+  .ratio iframe { width: 100%; height: 100%; border: 0; }
+  .close { position: absolute; z-index: 2; top: 12px; right: 12px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: rgba(6,6,15,.7); display: grid; place-items: center; }
+  .close svg { width: 20px; height: 20px; }
+
+  @media (max-width: 760px) {
+    .grid { grid-template-columns: 1fr; }
+    .tabs { border-radius: 16px; width: 100%; }
+    .tabs button { flex: 1 1 auto; padding: 10px 12px; }
+    .play { width: 64px; height: 64px; }
+  }
+</style>
+
+<script>
+  // Category tabs
+  const tabs = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const items = document.querySelectorAll<HTMLElement>('[data-grid] .item');
+  tabs.forEach((tab) =>
+    tab.addEventListener('click', () => {
+      const f = tab.dataset.filter;
+      tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+      items.forEach((it) => {
+        it.hidden = f !== 'all' && it.dataset.cat !== f;
+        if (!it.hidden) it.classList.add('in');
+      });
+    }),
+  );
+
+  // Video player dialog
+  const dlg = document.querySelector<HTMLDialogElement>('[data-player]')!;
+  const frame = dlg.querySelector<HTMLIFrameElement>('[data-iframe]')!;
+  document.querySelectorAll<HTMLButtonElement>('[data-video]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      frame.src = `https://drive.google.com/file/d/${btn.dataset.video}/preview`;
+      frame.title = btn.dataset.title ?? 'Video';
+      dlg.showModal();
+    }),
+  );
+  const close = () => dlg.close();
+  dlg.querySelector('[data-close]')!.addEventListener('click', close);
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
+  dlg.addEventListener('close', () => { frame.src = 'about:blank'; });
+</script>

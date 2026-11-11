@@ -1,0 +1,47 @@
+---
+import { content, contact } from '../data/site';
+const f = content.footer;
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="wrap row">
+    <p class="brand">MNH <b>XMotion</b></p>
+    <p class="copy">© {year} MNH XMotion. {f.rights}</p>
+    <nav class="links" aria-label="Legal">
+      <a href="#" title="Coming in Phase 5">{f.imprint}</a>
+      <a href="#" title="Coming in Phase 5">{f.privacy}</a>
+    </nav>
+  </div>
+</footer>
+
+<a class="wa" href={contact.whatsappHref} target="_blank" rel="noopener" aria-label={content.whatsapp}>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2m0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2m4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3"/></svg>
+</a>
+
+<style>
+  .footer { border-top: 1px solid var(--line); padding: 36px 0 40px; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 16px 30px; flex-wrap: wrap; }
+  .brand { margin: 0; font-family: var(--font-display); letter-spacing: .1em; }
+  .brand b { color: var(--copper-light); }
+  .copy { margin: 0; color: var(--muted); font-size: 14px; }
+  .links { display: flex; gap: 22px; font-size: 14px; color: var(--muted); }
+  .links a:hover { color: var(--text); }
+
+  .wa {
+    position: fixed; z-index: 60;
+    right: 22px; bottom: 22px;
+    width: 58px; height: 58px; border-radius: 50%;
+    display: grid; place-items: center;
+    color: #fff;
+    background: radial-gradient(circle at 30% 30%, #3ce07f, #1faa55);
+    box-shadow: 0 10px 30px -6px rgba(31,170,85,.7), 0 0 0 1px rgba(255,255,255,.15) inset;
+    transition: transform .4s var(--ease);
+  }
+  html[dir='rtl'] .wa { right: auto; left: 22px; }
+  .wa:hover { transform: scale(1.08); }
+  .wa svg { width: 30px; height: 30px; }
+  .wa::before { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #3ce07f; animation: ping 2.6s var(--ease) infinite; }
+  @keyframes ping { 0% { opacity: .8; transform: scale(1); } 80%, 100% { opacity: 0; transform: scale(1.6); } }
+  @media (max-width: 640px) { .wa { right: 16px; bottom: 16px; width: 54px; height: 54px; } }
+</style>

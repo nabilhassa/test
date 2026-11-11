@@ -1,0 +1,147 @@
+---
+import { content } from '../data/site';
+const n = content.nav;
+const links = [
+  { href: '#services', label: n.services },
+  { href: '#work', label: n.work },
+  { href: '#why', label: n.why },
+  { href: '#process', label: n.process },
+  { href: '#contact', label: n.contact },
+];
+---
+
+<header class="site-header" data-header>
+  <div class="bar">
+    <a href="#top" class="brand" aria-label="MNH XMotion, back to top">
+      <svg class="mono" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M14 50V16l18 14 18-14v34M22 50V30M42 50 26 36" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-name">MNH <b>XMotion</b></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="right">
+      <div class="lang" aria-label="Language">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        <a href="#" aria-disabled="true" title="German version coming in Phase 4">DE</a>
+        <span aria-hidden="true">|</span>
+        <a href="#" aria-disabled="true" title="Arabic version coming in Phase 4">AR</a>
+        <span aria-hidden="true">|</span>
+        <a href="#top" aria-current="true">EN</a>
+      </div>
+      <a href="#start" class="btn btn-primary cta">{n.cta}</a>
+      <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" data-burger>
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-menu hidden>
+    <ul>
+      {links.map((l, i) => <li style={`--i:${i}`}><a href={l.href} data-close>{l.label}</a></li>)}
+    </ul>
+    <a href="#start" class="btn btn-primary" data-close>{n.cta}</a>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    transition: background .5s, backdrop-filter .5s, border-color .5s;
+    border-bottom: 1px solid transparent;
+  }
+  .site-header.scrolled {
+    background: rgba(6, 6, 15, .72);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom-color: var(--line);
+  }
+  .bar {
+    width: min(1320px, 100% - 2 * var(--gutter));
+    margin-inline: auto;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--copper-light); }
+  .mono { width: 34px; height: 34px; filter: drop-shadow(0 0 8px rgba(255,122,47,.7)); }
+  .brand-name { font-family: var(--font-display); font-size: 17px; letter-spacing: .1em; color: var(--text); white-space: nowrap; }
+  .brand-name b { font-weight: 700; color: var(--copper-light); }
+  .nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+  .nav a { font-size: 14px; font-weight: 600; letter-spacing: .06em; color: var(--muted); position: relative; transition: color .3s; }
+  .nav a::after { content: ''; position: absolute; inset: auto 0 -6px; height: 1px; background: var(--copper); transform: scaleX(0); transition: transform .4s var(--ease); }
+  .nav a:hover { color: var(--text); }
+  .nav a:hover::after { transform: scaleX(1); }
+  .right { display: flex; align-items: center; gap: 18px; }
+  .lang { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+  .lang svg { width: 16px; height: 16px; }
+  .lang a[aria-current] { color: var(--copper-light); }
+  .lang a[aria-disabled] { opacity: .55; cursor: not-allowed; }
+  .lang span { opacity: .35; }
+  .cta { min-height: 42px; padding: 10px 20px; font-size: 13px; }
+  .burger { display: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.04); position: relative; }
+  .burger span { position: absolute; left: 13px; right: 13px; height: 1.5px; background: var(--text); transition: transform .4s var(--ease); }
+  .burger span:first-child { top: 17px; }
+  .burger span:last-child { top: 25px; }
+  .burger[aria-expanded='true'] span:first-child { transform: translateY(4px) rotate(45deg); }
+  .burger[aria-expanded='true'] span:last-child { transform: translateY(-4px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 76px 0 0;
+    background: rgba(6, 6, 15, .97);
+    backdrop-filter: blur(16px);
+    padding: 32px var(--gutter);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .mobile-menu[hidden] { display: none; }
+  .mobile-menu ul { list-style: none; margin: 0; padding: 0; }
+  .mobile-menu li { border-bottom: 1px solid var(--line); animation: slideIn .6s var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+  .mobile-menu li a { display: block; padding: 18px 0; font-family: var(--font-display); font-size: 26px; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(14px); } }
+
+  @media (max-width: 1080px) {
+    .nav { display: none; }
+    .burger { display: block; }
+  }
+  @media (max-width: 640px) {
+    .cta { display: none; }
+    .lang svg { display: none; }
+    .brand-name { font-size: 15px; }
+  }
+  @media (max-width: 380px) {
+    .brand-name { display: none; }
+  }
+</style>
+
+<script>
+  const header = document.querySelector('[data-header]')!;
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]')!;
+  const menu = document.querySelector<HTMLElement>('[data-menu]')!;
+  const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 30);
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const setOpen = (open: boolean) => {
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.hidden = !open;
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) header.classList.add('scrolled');
+    else onScroll();
+  };
+  burger.addEventListener('click', () => setOpen(burger.getAttribute('aria-expanded') !== 'true'));
+  menu.querySelectorAll('[data-close]').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+  document.querySelectorAll('.lang a[aria-disabled]').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
+</script>

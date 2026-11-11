@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: 'en' | 'de' | 'ar';
+}
+const { title, description, lang = 'en' } = Astro.props;
+const dir = lang === 'ar' ? 'rtl' : 'ltr';
+---
+
+<!doctype html>
+<html lang={lang} dir={dir} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#06060f" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <script is:inline>document.documentElement.classList.remove('no-js');</script>
+  </head>
+  <body>
+    <slot />
+    <script>
+      // Reveal elements as they scroll into view
+      const els = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
+      );
+      els.forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>

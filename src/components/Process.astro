@@ -1,0 +1,75 @@
+---
+import { content } from '../data/site';
+const p = content.process;
+---
+
+<section class="section space" id="process">
+  <div class="wrap">
+    <p class="kicker reveal">{p.kicker}</p>
+    <h2 class="h2 reveal" style="--d:.08s">{p.title}</h2>
+
+    <!-- Styled like an editing timeline: a playhead runs along the track -->
+    <div class="tl-wrap" data-timeline>
+    <div class="track" aria-hidden="true"><div class="progress" data-progress></div></div>
+    <ol class="timeline">
+      {p.steps.map((s, i) => (
+        <li class="step reveal" style={`--d:${0.06 * i}s`}>
+          <span class="key" aria-hidden="true"></span>
+          <span class="no">Step {String(i + 1).padStart(2, '0')}</span>
+          <h3>{s.t}</h3>
+          <p>{s.d}</p>
+        </li>
+      ))}
+    </ol>
+    </div>
+
+    <div class="cta reveal">
+      <a href="#start" class="btn btn-primary">
+        {p.cta}
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tl-wrap { position: relative; margin-top: 64px; }
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px 32px; }
+  .track { display: none; }
+  .step { position: relative; padding: 28px 26px 26px; border-radius: var(--radius); border: 1px solid var(--line); background: linear-gradient(170deg, rgba(20,21,41,.85), rgba(9,9,20,.85)); transition: border-color .5s, transform .6s var(--ease); }
+  .step:hover { border-color: var(--line-strong); transform: translateY(-5px); }
+  .key { position: absolute; top: -9px; left: 26px; width: 16px; height: 16px; rotate: 45deg; background: var(--bg); border: 2px solid var(--copper); box-shadow: 0 0 14px rgba(255,122,47,.7); }
+  html[dir='rtl'] .key { left: auto; right: 26px; }
+  .no { display: block; font-size: 12px; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  h3 { font-family: var(--font-display); font-size: 22px; margin: 0 0 10px; }
+  html[lang='ar'] h3 { font-family: var(--font-ar); }
+  p { margin: 0; color: #c3c0d6; font-size: 15.5px; }
+  .cta { margin-top: 64px; display: flex; justify-content: center; }
+  .cta .btn { min-width: min(100%, 360px); }
+
+  /* Mobile/tablet: vertical timeline with a progress line */
+  @media (max-width: 960px) {
+    .tl-wrap { padding-inline-start: 34px; }
+    .timeline { grid-template-columns: 1fr; gap: 22px; }
+    .track { display: block; position: absolute; top: 0; bottom: 0; inset-inline-start: 7px; width: 2px; background: var(--line); border-radius: 2px; }
+    .progress { width: 100%; height: 0; background: linear-gradient(180deg, var(--copper-light), var(--copper), var(--magenta)); box-shadow: 0 0 12px var(--copper); }
+    .key { top: 30px; left: -34px; }
+    html[dir='rtl'] .key { right: -34px; }
+  }
+</style>
+
+<script>
+  const tl = document.querySelector<HTMLElement>('[data-timeline]');
+  const bar = document.querySelector<HTMLElement>('[data-progress]');
+  if (tl && bar) {
+    const update = () => {
+      const r = tl.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (vh * 0.6 - r.top) / r.height));
+      bar.style.height = `${p * 100}%`;
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+  }
+</script>

@@ -8,8 +8,8 @@ Planning document for the new landing page. Filled in step by step.
 | 2 | Pages & content | ✅ Done (a few open questions) |
 | 3 | Features | ✅ Done |
 | 4 | Look & feel | ✅ Done |
-| 5 | Tech & hosting | ⏳ In progress |
-| 6 | Build plan | ⬜ To do |
+| 5 | Tech & hosting | ✅ Done |
+| 6 | Build plan | ✅ Done, ready to build |
 
 ---
 
@@ -209,10 +209,40 @@ Icons: Email · Phone · Instagram
 - A grid of videos per category; each preview plays on hover and opens full-screen on click
 - ⚠️ Needed from you: the videos (files or YouTube/Vimeo/Instagram links)
 
-## 5. Tech & hosting
+## 5. Tech & hosting ✅
 
-_To be filled in._
+| Part | Choice | Cost |
+|------|--------|------|
+| Website framework | **Astro**: very fast, built-in multi-language support (EN/DE/AR) | Free |
+| 3D & animation | **Three.js** (3D logo), **GSAP** (scroll and title animations), **Lenis** (smooth scroll) | Free |
+| Hosting | **Netlify**: updates automatically from GitHub | Free plan |
+| Form & emails | **Netlify Functions + Resend**: the brief is emailed to you and the confirmation to the client | Free plan |
+| Call booking | **Cal.com** embedded in the page | Free plan |
+| Videos | **Bunny Stream**: fast streaming, no branding | ~1 €/month |
+| Statistics | **Umami Cloud**: privacy-friendly, no cookie banner needed | Free plan |
+| Domain | **Buy one**, e.g. mnhxmotion.com, then connect it to Netlify | ~10–15 €/year |
+| Updates | **Ask Claude**: you describe the change, I edit, and it goes live automatically | - |
 
-## 6. Build plan
+## 6. Build plan ✅
 
-_To be filled in._
+Each phase ends with screenshots / a preview for your feedback before moving on.
+
+| Phase | What gets built | Needs from you |
+|-------|-----------------|----------------|
+| **1. Foundation** | Astro project, colors/fonts, all 8 sections with the old texts (EN), placeholder videos, mobile layout | Nothing, can start now |
+| **2. Cinematic layer** | 3D glowing logo sphere, scroll and title animations, hover glows, film grain, showreel hero | Logo file, showreel clip (placeholders until then) |
+| **3. Project brief + booking** | Multi-step form (16 questions → personal info → Cal.com slot), emails to you and the client, WhatsApp button | Cal.com + Resend accounts (I'll guide you) |
+| **4. Languages** | German and Arabic versions (Arabic right-to-left), working language switch | You review the translations |
+| **5. Legal, SEO & polish** | Impressum, Datenschutz, analytics, SEO tags, speed and accessibility checks | Name and address for the Impressum |
+| **6. Launch** | Connect GitHub → Netlify, connect the domain, final test on phone and desktop | Netlify account, domain purchase |
+
+### Checklist: things to send / set up
+- [ ] **Fix GitHub access** (connect GitHub + install the Claude app on `nabilhassa/test`)
+- [ ] Confirm email spelling: mnhxmtion@gmail.com?
+- [ ] Logo file (PNG with transparent background or SVG)
+- [ ] Showreel clip (15–30 s)
+- [ ] Portfolio videos per category (VFX / Cinematic Storytelling / Motion Graphic)
+- [ ] Instagram link / handle (+ other socials?)
+- [ ] Options of "How did you hear about us?"
+- [ ] Name and postal address for the Impressum
+- [ ] Accounts: Netlify, Cal.com, Resend, Bunny Stream, domain registrar (later phases)

@@ -5,9 +5,9 @@ Planning document for the new landing page. Filled in step by step.
 | Step | Topic | Status |
 |------|-------|--------|
 | 1 | Purpose & audience | ✅ Done |
-| 2 | Pages & content | ⏳ In progress |
-| 3 | Features | ⬜ To do |
-| 4 | Look & feel | ⬜ To do |
+| 2 | Pages & content | ✅ Done (a few open questions) |
+| 3 | Features | ✅ Done |
+| 4 | Look & feel | ⏳ In progress |
 | 5 | Tech & hosting | ⬜ To do |
 | 6 | Build plan | ⬜ To do |
 
@@ -54,7 +54,7 @@ Cinematic video editing for businesses and content creators, using VFX, 3D anima
 
 ---
 
-## 2. Pages & content ⏳
+## 2. Pages & content ✅
 
 One landing page that keeps **the same sections as the old Carrd site**, in the same order. Text copied from the old site (from screenshots):
 
@@ -152,9 +152,31 @@ Icons: Email · Phone · Instagram
 - Instagram handle / link
 - Translations: do German and Arabic texts already exist on the old site?
 
-## 3. Features
+## 3. Features ✅
 
-_To be filled in._
+### 3.1 Project brief: built into the site
+- Custom multi-step form inside the landing page, not Tally. It opens from **Start Project** and every other "Book a call" button.
+- Same questions as the Tally form (section 2.6), styled to match the site, with a progress bar and Back/Next buttons.
+- Available in **EN / DE / AR**, with right-to-left layout for Arabic.
+- Answers are emailed to MNH XMotion (and can also go to a spreadsheet).
+- "Made with Tally" goes away.
+
+### 3.2 Call booking: live calendar
+- The client books a **real free slot** in a calendar (Cal.com, free plan) instead of choosing "preferred days + time window".
+- It syncs with your calendar (e.g. Google Calendar), so busy times are blocked automatically.
+- A video-call link (Google Meet / Zoom / Cal Video) and reminders are sent automatically.
+- **New order of the flow:** brief questions → personal info → pick a slot. The calendar is pre-filled with the client's name and email, so they don't type them twice.
+- Questions 14–16 (call type, days, time window) are replaced by the calendar. Video vs phone can be offered as two call types in Cal.com.
+
+### 3.3 Extras
+- **WhatsApp button:** a floating button that opens a chat with +49 15566 920370
+- **Automatic confirmation email** to the client after they submit the brief
+- **Impressum + Datenschutzerklärung:** legal pages required in Germany. ⚠️ The Impressum legally needs a name and postal address.
+- **Visitor statistics:** privacy-friendly analytics without a cookie banner (e.g. Cloudflare Web Analytics or Umami)
+
+### 3.4 What you will need to set up (I'll guide you)
+- A free **Cal.com** account connected to your calendar
+- An email-sending service for the form and the confirmation email (chosen in step 5)
 
 ## 4. Look & feel
 

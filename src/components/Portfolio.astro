@@ -9,7 +9,7 @@ const cats = Object.entries(w.categories) as [keyof typeof w.categories, string]
     <div class="head">
       <div>
         <p class="kicker reveal">{w.kicker}</p>
-        <h2 class="h2 reveal" style="--d:.08s">{w.title}</h2>
+        <h2 class="h2 reveal" data-split>{w.title}</h2>
       </div>
       <div class="tabs reveal" style="--d:.14s" role="tablist" aria-label="Filter by category">
         <button role="tab" aria-selected="true" data-filter="all">{w.all}</button>
@@ -20,7 +20,7 @@ const cats = Object.entries(w.categories) as [keyof typeof w.categories, string]
     <ul class="grid" data-grid>
       {portfolio.map((v, i) => (
         <li class="item reveal" style={`--d:${0.1 + (i % 3) * 0.08}s`} data-cat={v.category}>
-          <button class="tile" data-video={v.id} data-title={v.title} aria-label={`${w.play}: ${v.title}`}>
+          <button class="tile" data-spot data-video={v.id} data-title={v.title} aria-label={`${w.play}: ${v.title}`}>
             <span class="thumb" aria-hidden="true">
               <img
                 src={`https://drive.google.com/thumbnail?id=${v.id}&sz=w1000`}
@@ -52,7 +52,7 @@ const cats = Object.entries(w.categories) as [keyof typeof w.categories, string]
       <button class="close" data-close aria-label={w.close}>
         <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
-      <div class="ratio"><iframe data-iframe title="Video" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+      <div class="ratio"><iframe data-iframe title="Video" allow="autoplay; fullscreen"></iframe></div>
     </div>
   </dialog>
 </section>

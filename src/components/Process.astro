@@ -6,14 +6,14 @@ const p = content.process;
 <section class="section space" id="process">
   <div class="wrap">
     <p class="kicker reveal">{p.kicker}</p>
-    <h2 class="h2 reveal" style="--d:.08s">{p.title}</h2>
+    <h2 class="h2 reveal" data-split>{p.title}</h2>
 
     <!-- Styled like an editing timeline: a playhead runs along the track -->
     <div class="tl-wrap" data-timeline>
     <div class="track" aria-hidden="true"><div class="progress" data-progress></div></div>
     <ol class="timeline">
       {p.steps.map((s, i) => (
-        <li class="step reveal" style={`--d:${0.06 * i}s`}>
+        <li class="step reveal" style={`--d:${0.06 * i}s`} data-spot>
           <span class="key" aria-hidden="true"></span>
           <span class="no">Step {String(i + 1).padStart(2, '0')}</span>
           <h3>{s.t}</h3>

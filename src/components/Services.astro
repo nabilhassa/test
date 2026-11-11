@@ -11,11 +11,11 @@ const icons: Record<string, string> = {
 <section class="section space" id="services">
   <div class="wrap">
     <p class="kicker reveal">{s.kicker}</p>
-    <h2 class="h2 reveal" style="--d:.08s">{s.title}</h2>
+    <h2 class="h2 reveal" data-split>{s.title}</h2>
 
     <div class="grid">
       {s.items.map((it, i) => (
-        <article class="card reveal" style={`--d:${0.12 + i * 0.1}s`}>
+        <article class="card reveal" style={`--d:${0.12 + i * 0.1}s`} data-spot data-tilt>
           <div class="glow" aria-hidden="true"></div>
           <div class="num" aria-hidden="true">0{i + 1}</div>
           <div class="icon" aria-hidden="true">

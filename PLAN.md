@@ -215,7 +215,7 @@ New logo artwork: `assets/brand/xmotion-eye-keyvisual.jpg` (1792×2400)
 ### 4.4 Hero
 - Full-screen **showreel video in the background** (silent, looping, 15–30 s), with a dark overlay
 - On top: the 3D logo, **MNH XMotion**, the tagline, a **Start Project** button and the language switch (DE | AR | EN)
-- ⚠️ Needed from you: a 15–30 s showreel clip
+- ⚠️ Needed from you: a 15–30 s showreel clip (optional now; the eye key visual and iris particles work as the hero without it)
 
 ### 4.5 Portfolio
 - **Category tabs:** VFX · Cinematic Storytelling · Motion Graphic
@@ -243,7 +243,7 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 | Phase | What gets built | Needs from you |
 |-------|-----------------|----------------|
 | ✅ **1. Foundation** | Astro project, colors/fonts, all 8 sections with the old texts (EN), placeholder videos, mobile layout | Nothing, can start now |
-| **2. Cinematic layer** | 3D glowing logo sphere, scroll and title animations, hover glows, film grain, showreel hero | Logo file, showreel clip (placeholders until then) |
+| ✅ **2. Cinematic layer** | 3D glowing logo sphere, scroll and title animations, hover glows, film grain, showreel hero | Logo file, showreel clip (placeholders until then) |
 | **3. Project brief + booking** | Multi-step form (16 questions → personal info → Cal.com slot), emails to you and the client, WhatsApp button | Cal.com + Resend accounts (I'll guide you) |
 | **4. Languages** | German and Arabic versions (Arabic right-to-left), working language switch | You review the translations |
 | **5. Legal, SEO & polish** | Impressum, Datenschutz, analytics, SEO tags, speed and accessibility checks | Name and address for the Impressum |
@@ -262,7 +262,7 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
   - Video 4: `1hSVQLBo1BGQez0R5ZzYjoLiaM_PGhgOI`
   - Until Bunny Stream is set up, the site embeds them via `https://drive.google.com/file/d/<ID>/preview` (sharing must be "Anyone with the link")
   - [x] Categories: any order is fine (split across VFX / Cinematic / Motion; titles "Project 01–04" for now)
-- [ ] Instagram link / handle (+ other socials?)
+- [x] Instagram: @mnhxmotion
 - [ ] Options of "How did you hear about us?"
 - [ ] Name and postal address for the Impressum
 - [ ] Accounts: Netlify, Cal.com, Resend, Bunny Stream, domain registrar (later phases)

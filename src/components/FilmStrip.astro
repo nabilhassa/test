@@ -1,0 +1,40 @@
+---
+// Endless film strip divider, inspired by the XMOTION film strip in the logo
+interface Props { words: string[]; reverse?: boolean; tilt?: number }
+const { words, reverse = false, tilt = -2 } = Astro.props;
+const row = [...words, ...words, ...words];
+---
+
+<div class="strip-wrap" style={`--tilt:${tilt}deg`} aria-hidden="true">
+  <div class="strip">
+    <div class:list={['track', { reverse }]}>
+      {[0, 1].map(() => (
+        <div class="set">
+          {row.map((w) => (<><span class="w">{w}</span><span class="star">✦</span></>))}
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .strip-wrap { position: relative; z-index: 3; overflow: hidden; padding: 40px 0; margin-block: -40px; pointer-events: none; }
+  .strip {
+    transform: rotate(var(--tilt));
+    width: 110%;
+    margin-left: -5%;
+    padding: 22px 0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 14px, rgba(6, 6, 15, .95) 14px 26px) top / 100% 9px no-repeat,
+      repeating-linear-gradient(90deg, transparent 0 14px, rgba(6, 6, 15, .95) 14px 26px) bottom / 100% 9px no-repeat,
+      linear-gradient(90deg, #5a2410, #b8501f 30%, #ff7a2f 50%, #b8501f 70%, #5a2410);
+    box-shadow: 0 0 50px -6px rgba(255, 122, 47, .55);
+    border-block: 2px solid rgba(255, 178, 122, .5);
+  }
+  .track { display: flex; width: max-content; animation: run 38s linear infinite; }
+  .track.reverse { animation-direction: reverse; }
+  .set { display: flex; align-items: center; }
+  .w { font-family: var(--font-display); font-weight: 700; font-size: clamp(18px, 2.4vw, 28px); letter-spacing: .3em; color: #fff3e8; text-shadow: 0 0 12px rgba(255, 210, 170, .9); padding-inline: 26px; white-space: nowrap; }
+  .star { color: #22d3c5; font-size: 14px; text-shadow: 0 0 10px #22d3c5; }
+  @keyframes run { to { transform: translateX(-50%); } }
+</style>

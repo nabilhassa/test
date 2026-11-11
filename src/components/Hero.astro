@@ -3,6 +3,16 @@ import { Image } from 'astro:assets';
 import eye from '../assets/xmotion-eye.jpg';
 import { content } from '../data/site';
 const h = content.hero;
+
+// Per-letter colors for the title (copper-light → copper → magenta), so each letter can animate on its own
+const stops = [[255, 178, 122], [255, 122, 47], [214, 59, 168]];
+const mix = (t: number) => {
+  const seg = t < 0.6 ? 0 : 1;
+  const lt = seg === 0 ? t / 0.6 : (t - 0.6) / 0.4;
+  const a = stops[seg], b = stops[seg + 1];
+  return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * lt)).join(',')})`;
+};
+const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.max(1, arr.length - 1)) }));
 ---
 
 <section class="hero" id="top">
@@ -17,6 +27,7 @@ const h = content.hero;
       class="eye"
       data-parallax
     />
+    <canvas class="iris" data-iris></canvas>
     <div class="shade"></div>
   </div>
 
@@ -29,9 +40,9 @@ const h = content.hero;
 
   <div class="content">
     <p class="kicker reveal">{h.eyebrow}</p>
-    <h1 class="display reveal" style="--d:.1s">
-      <span class="l1">{h.title[0]}</span>
-      <span class="l2 grad-text">{h.title[1]}</span>
+    <h1 class="display" aria-label={`${h.title[0]} ${h.title[1]}`}>
+      <span class="l1" aria-hidden="true">{[...h.title[0]].map((ch, i) => <span class="ch" style={`--ci:${i}`}>{ch}</span>)}</span>
+      <span class="l2" aria-hidden="true">{letters.map((l, i) => <span class="ch" style={`--ci:${i + 3};color:${l.color}`}>{l.ch}</span>)}</span>
     </h1>
     <p class="lead reveal" style="--d:.2s">{h.lead}</p>
     <p class="sub reveal" style="--d:.28s">{h.sub}</p>
@@ -111,7 +122,15 @@ const h = content.hero;
     margin: 0 0 28px;
     letter-spacing: .02em;
   }
-  .display span { display: block; }
+  .display > span { display: block; }
+  .ch { display: inline-block; animation: chIn 1.3s var(--ease) both; animation-delay: calc(var(--intro-delay, 0s) + .15s + var(--ci) * 65ms); }
+  @keyframes chIn {
+    from { opacity: 0; transform: translateY(38%) scale(1.15); filter: blur(14px); }
+    60% { filter: blur(0); }
+    to { opacity: 1; transform: none; filter: blur(0); }
+  }
+  .hero .reveal { transition-delay: calc(var(--d, 0s) + var(--intro-delay, 0s) + .5s); }
+  .iris { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; }
   .l1 { font-size: clamp(30px, 5vw, 64px); letter-spacing: .32em; color: rgba(243,241,250,.9); font-weight: 500; }
   .l2 { font-size: clamp(56px, 12vw, 168px); filter: drop-shadow(0 0 30px rgba(255,122,47,.35)); padding-bottom: .06em; }
   .lead { font-size: clamp(19px, 2.1vw, 25px); font-weight: 600; max-width: 620px; margin: 0 0 10px; line-height: 1.45; }
@@ -176,6 +195,7 @@ const h = content.hero;
 
   // Gentle parallax on the key visual
   const img = document.querySelector<HTMLElement>('[data-parallax]');
+  const iris = document.querySelector<HTMLElement>('[data-iris]');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (img && !reduce) {
     window.addEventListener(
@@ -183,6 +203,7 @@ const h = content.hero;
       () => {
         const y = Math.min(window.scrollY, window.innerHeight);
         img.style.transform = `translateY(${y * 0.25}px)`;
+        if (iris) iris.style.transform = `translateY(${y * 0.25}px)`;
       },
       { passive: true },
     );

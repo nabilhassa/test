@@ -1,0 +1,60 @@
+---
+// Cinematic opening: the monogram draws itself, the name appears, then the "shutter" opens.
+// Plays once per browser session; skipped for reduced-motion users. Click to skip.
+---
+
+<div class="intro" data-intro aria-hidden="true">
+  <div class="half top"></div>
+  <div class="half bottom"></div>
+  <div class="stage">
+    <svg class="mark" viewBox="0 0 64 64">
+      <path pathLength="1" d="M14 50V16l18 14 18-14v34M22 50V30M42 50 26 36" />
+    </svg>
+    <p class="name">MNH <b>XMOTION</b></p>
+    <div class="bar"><i></i></div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var el = document.querySelector('[data-intro]');
+    var root = document.documentElement;
+    var seen = false;
+    try { seen = sessionStorage.getItem('xm-intro') === '1'; } catch (e) {}
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (seen || reduced) { el.remove(); return; }
+    try { sessionStorage.setItem('xm-intro', '1'); } catch (e) {}
+    root.style.setProperty('--intro-delay', '1.9s');
+    root.classList.add('intro-on');
+    var done = function () {
+      if (!el.isConnected) return;
+      el.classList.add('open');
+      root.classList.remove('intro-on');
+      setTimeout(function () { el.remove(); }, 1000);
+    };
+    var t = setTimeout(done, 2000);
+    el.addEventListener('click', function () { clearTimeout(t); root.style.setProperty('--intro-delay', '0s'); done(); });
+  })();
+</script>
+
+<style>
+  .intro { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; cursor: pointer; }
+  .no-js .intro { display: none; }
+  .half { position: absolute; left: 0; right: 0; height: 50.5%; background: #04040a; transition: transform 1s cubic-bezier(.76, 0, .24, 1); }
+  .top { top: 0; }
+  .bottom { bottom: 0; }
+  .open .top { transform: translateY(-100%); }
+  .open .bottom { transform: translateY(100%); }
+  .stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 22px; transition: opacity .4s, transform 1s cubic-bezier(.76, 0, .24, 1); }
+  .open .stage { opacity: 0; transform: scale(1.4); }
+  .mark { width: 110px; height: 110px; overflow: visible; filter: drop-shadow(0 0 14px rgba(255, 122, 47, .9)); }
+  .mark path { fill: none; stroke: #ffb27a; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.1s cubic-bezier(.65, 0, .35, 1) .1s forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .name { margin: 0; font-family: var(--font-display); font-size: 18px; letter-spacing: .5em; color: #f3f1fa; opacity: 0; animation: name 1s cubic-bezier(.22, 1, .36, 1) .7s forwards; padding-inline-start: .5em; }
+  .name b { color: #ffb27a; }
+  @keyframes name { from { opacity: 0; letter-spacing: .1em; filter: blur(8px); } to { opacity: 1; letter-spacing: .5em; filter: blur(0); } }
+  .bar { width: 160px; height: 1px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+  .bar i { display: block; height: 100%; background: linear-gradient(90deg, #22d3c5, #ff7a2f, #d63ba8); transform-origin: left; transform: scaleX(0); animation: load 1.7s cubic-bezier(.65, 0, .35, 1) forwards; }
+  @keyframes load { to { transform: scaleX(1); } }
+  :global(html.intro-on) { overflow: hidden; }
+</style>

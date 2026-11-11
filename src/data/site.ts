@@ -6,7 +6,7 @@ export const contact = {
   phoneDisplay: '+49 15566 920370',
   phoneHref: 'tel:+4915566920370',
   whatsappHref: 'https://wa.me/4915566920370',
-  instagramHandle: '@mnhxmotion', // TODO: confirm handle
+  instagramHandle: '@mnhxmotion',
   instagramHref: 'https://www.instagram.com/mnhxmotion/',
 };
 

@@ -255,7 +255,13 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 - [x] New logo artwork (eye key visual), received
 - [ ] MN monogram alone (PNG/SVG, transparent), or I redraw it as SVG
 - [ ] Showreel clip (15–30 s)
-- [ ] Portfolio videos per category (VFX / Cinematic Storytelling / Motion Graphic)
+- [x] Portfolio videos, first 4 received (Google Drive):
+  - Video 1: `14pnOhSx3rHIYcbGD_VM4oMK6meZf7EQT`
+  - Video 2: `1Hq7kyRMaP65MyYWHzvWUA6D2kaoFgYBv`
+  - Video 3: `1fRhCTF7WAAvuTV26DklBP1dLjK6EqQna`
+  - Video 4: `1hSVQLBo1BGQez0R5ZzYjoLiaM_PGhgOI`
+  - Until Bunny Stream is set up, the site embeds them via `https://drive.google.com/file/d/<ID>/preview` (sharing must be "Anyone with the link")
+  - [ ] Category + title for each video
 - [ ] Instagram link / handle (+ other socials?)
 - [ ] Options of "How did you hear about us?"
 - [ ] Name and postal address for the Impressum

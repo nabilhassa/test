@@ -180,11 +180,24 @@ Icons: Email · Phone · Instagram
 
 ## 4. Look & feel ✅
 
-### 4.1 Colors (no preference given → keep the brand colors, upgraded)
-- **Background:** deep cinematic black (#0A0807), with near-black warm panels (#140E0B)
-- **Accent:** copper / rose-gold taken from the logo (#C8896A, highlight #F0B48C), used for glows, thin borders and gradient buttons
-- **Text:** warm off-white (#F5EDE6), muted text (#A89A90)
-- **Texture:** subtle film grain, soft light flares, vignette at the edges
+### 4.0 New brand visual 🆕
+New logo artwork: `assets/brand/xmotion-eye-keyvisual.jpg` (1792×2400)
+- A cosmic eye whose iris is a galaxy swirl around a camera lens, with the glowing **MN monogram + planet** at the centre
+- A film strip spelling **XMOTION** wraps over the eye
+- Node-editor tags (FX · VFX · 3D · COLOR) connect to the monogram; a camera viewfinder frame (● REC, battery) sits in the corners
+- **On the site:**
+  - Hero key visual, split into layers for parallax depth, with a slowly rotating galaxy iris (WebGL)
+  - The viewfinder frame (REC dot, corner brackets) becomes a UI element around the hero and the videos
+  - The FX / VFX / 3D / COLOR node tags animate in as small labels
+- ⚠️ Still needed: **the MN monogram on its own** (PNG/SVG, transparent background) for the navigation bar, favicon and loading screen. I can redraw it as an SVG from the artwork if needed.
+
+### 4.1 Colors: updated to match the new logo ("cosmic copper")
+- **Background:** deep space black-blue (#06060F), panels #0E0F1E, faint stars and nebula haze
+- **Primary accent:** fiery orange / copper from the monogram and film strip (#FF7A2F → #E8914A), used for buttons, glows and highlights
+- **Secondary accent:** teal / cyan from the iris (#22D3C5), used for links, hover states and the node tags
+- **Gradient accent:** magenta / violet (#D63BA8 → #6B3FA0), used only in glows and gradients
+- **Text:** soft white (#F3F1FA), muted text (#9A98B5)
+- **Texture:** film grain, star particles, light flares, lens vignette
 
 ### 4.2 Typography
 - **Headings:** Cinzel, a movie-poster serif close to the old small-caps titles
@@ -239,7 +252,8 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 ### Checklist: things to send / set up
 - [ ] **Fix GitHub access** (connect GitHub + install the Claude app on `nabilhassa/test`)
 - [ ] Confirm email spelling: mnhxmtion@gmail.com?
-- [ ] Logo file (PNG with transparent background or SVG)
+- [x] New logo artwork (eye key visual), received
+- [ ] MN monogram alone (PNG/SVG, transparent), or I redraw it as SVG
 - [ ] Showreel clip (15–30 s)
 - [ ] Portfolio videos per category (VFX / Cinematic Storytelling / Motion Graphic)
 - [ ] Instagram link / handle (+ other socials?)

@@ -1,0 +1,71 @@
+---
+// The MNH monogram as SVG.
+//  - "outline": dark body with a gold border (like the logo) – header, fallback
+//  - "fill":    solid gold – very small sizes
+//  - "draw":    gold lines that draw themselves – intro animation
+import { pieces, order, SIZE, planet, toPath } from '../data/monogram';
+
+interface Props {
+  variant?: 'outline' | 'fill' | 'draw';
+  withPlanet?: boolean;
+  class?: string;
+  title?: string;
+  /** Border width in screen pixels for "outline" / "draw" */
+  line?: number;
+}
+const { variant = 'outline', withPlanet = false, class: cls, title, line = 1.5 } = Astro.props;
+const pad = variant === 'fill' ? 20 : 40;
+const id = `mg${Math.random().toString(36).slice(2, 8)}`;
+const { cx, cy, r, ring } = planet;
+---
+
+<svg
+  class={cls}
+  viewBox={`${-pad} ${-pad} ${SIZE.w + pad * 2} ${SIZE.h + pad * 2}`}
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  aria-label={title}
+  data-variant={variant}
+>
+  <defs>
+    <linearGradient id={`${id}g`} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe3a8" />
+      <stop offset=".45" stop-color="#ffb04a" />
+      <stop offset="1" stop-color="#ff7a2f" />
+    </linearGradient>
+    <radialGradient id={`${id}p`} cx=".35" cy=".3" r=".8">
+      <stop offset="0" stop-color="#5a2a22" />
+      <stop offset=".6" stop-color="#1a0d10" />
+      <stop offset="1" stop-color="#ff9a4a" />
+    </radialGradient>
+  </defs>
+
+  {order.map((k) => (
+    <path
+      class={`piece ${k}`}
+      d={toPath(pieces[k])}
+      pathLength={variant === 'draw' ? 1 : undefined}
+      fill={variant === 'fill' ? `url(#${id}g)` : '#100b0c'}
+      stroke={variant === 'fill' ? (k === 'inner' ? '#06060f' : 'none') : `url(#${id}g)`}
+      stroke-width={variant === 'fill' ? 34 : line}
+      vector-effect={variant === 'fill' ? undefined : 'non-scaling-stroke'}
+      stroke-linejoin="round"
+      paint-order={variant === 'fill' ? 'stroke' : undefined}
+    />
+  ))}
+
+  {withPlanet && (
+    <g class="planet">
+      <ellipse cx={cx} cy={cy} rx={ring.rx} ry={ring.ry} transform={`rotate(${ring.angle} ${cx} ${cy})`} fill="none" stroke={`url(#${id}g)`} stroke-width="14" opacity=".55" />
+      <circle cx={cx} cy={cy} r={r} fill={`url(#${id}p)`} stroke={`url(#${id}g)`} stroke-width="10" />
+      <path
+        d={`M${cx - ring.rx} ${cy} A${ring.rx} ${ring.ry} 0 0 0 ${cx + ring.rx} ${cy}`}
+        transform={`rotate(${ring.angle} ${cx} ${cy})`}
+        fill="none"
+        stroke={`url(#${id}g)`}
+        stroke-width="16"
+        stroke-linecap="round"
+      />
+    </g>
+  )}
+</svg>

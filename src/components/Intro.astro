@@ -1,4 +1,5 @@
 ---
+import Monogram from './Monogram.astro';
 // Cinematic opening: the monogram draws itself, the name appears, then the "shutter" opens.
 // Plays once per browser session; skipped for reduced-motion users. Click to skip.
 ---
@@ -7,9 +8,7 @@
   <div class="half top"></div>
   <div class="half bottom"></div>
   <div class="stage">
-    <svg class="mark" viewBox="0 0 64 64">
-      <path pathLength="1" d="M14 50V16l18 14 18-14v34M22 50V30M42 50 26 36" />
-    </svg>
+    <Monogram variant="draw" class="mark" line={2} />
     <p class="name">MNH <b>XMOTION</b></p>
     <div class="bar"><i></i></div>
   </div>
@@ -47,9 +46,13 @@
   .open .bottom { transform: translateY(100%); }
   .stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 22px; transition: opacity .4s, transform 1s cubic-bezier(.76, 0, .24, 1); }
   .open .stage { opacity: 0; transform: scale(1.4); }
-  .mark { width: 110px; height: 110px; overflow: visible; filter: drop-shadow(0 0 14px rgba(255, 122, 47, .9)); }
-  .mark path { fill: none; stroke: #ffb27a; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.1s cubic-bezier(.65, 0, .35, 1) .1s forwards; }
+  .stage :global(.mark) { width: auto; height: 130px; overflow: visible; filter: drop-shadow(0 0 12px rgba(255, 140, 60, .9)); }
+  .stage :global(.mark .piece) { fill-opacity: 0; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.1s cubic-bezier(.65, 0, .35, 1) forwards, solid .5s ease 1.05s forwards; }
+  .stage :global(.mark .left) { animation-delay: .12s, 1.05s; }
+  .stage :global(.mark .wedge) { animation-delay: .2s, 1.05s; }
+  .stage :global(.mark .inner) { animation-delay: .28s, 1.05s; }
   @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes solid { to { fill-opacity: 1; } }
   .name { margin: 0; font-family: var(--font-display); font-size: 18px; letter-spacing: .5em; color: #f3f1fa; opacity: 0; animation: name 1s cubic-bezier(.22, 1, .36, 1) .7s forwards; padding-inline-start: .5em; }
   .name b { color: #ffb27a; }
   @keyframes name { from { opacity: 0; letter-spacing: .1em; filter: blur(8px); } to { opacity: 1; letter-spacing: .5em; filter: blur(0); } }

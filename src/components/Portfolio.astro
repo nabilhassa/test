@@ -1,5 +1,6 @@
 ---
 import { content, portfolio } from '../data/site';
+import Monogram from './Monogram.astro';
 const w = content.work;
 const cats = Object.entries(w.categories) as [keyof typeof w.categories, string][];
 ---
@@ -29,9 +30,7 @@ const cats = Object.entries(w.categories) as [keyof typeof w.categories, string]
                 referrerpolicy="no-referrer"
                 onerror="this.remove()"
               />
-              <span class="fallback">
-                <svg viewBox="0 0 64 64"><path d="M14 50V16l18 14 18-14v34M22 50V30M42 50 26 36" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>
-              </span>
+              <span class="fallback"><Monogram variant="outline" class="fb-mono" line={1.2} /></span>
             </span>
             <span class="vf" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
             <span class="play" aria-hidden="true">
@@ -93,7 +92,7 @@ const cats = Object.entries(w.categories) as [keyof typeof w.categories, string]
       #0a0a17;
     color: rgba(255,178,122,.55);
   }
-  .fallback svg { width: 30%; max-width: 160px; filter: drop-shadow(0 0 18px rgba(255,122,47,.5)); }
+  .fallback :global(.fb-mono) { height: 42%; width: auto; opacity: .75; filter: drop-shadow(0 0 18px rgba(255,122,47,.5)); }
   .thumb::after { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(0deg, rgba(6,6,15,.92), transparent 55%); }
 
   .vf i { position: absolute; z-index: 3; width: 22px; height: 22px; border: 1.5px solid rgba(255,255,255,.45); transition: inset .5s var(--ease); }

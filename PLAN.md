@@ -7,8 +7,8 @@ Planning document for the new landing page. Filled in step by step.
 | 1 | Purpose & audience | ✅ Done |
 | 2 | Pages & content | ✅ Done (a few open questions) |
 | 3 | Features | ✅ Done |
-| 4 | Look & feel | ⏳ In progress |
-| 5 | Tech & hosting | ⬜ To do |
+| 4 | Look & feel | ✅ Done |
+| 5 | Tech & hosting | ⏳ In progress |
 | 6 | Build plan | ⬜ To do |
 
 ---
@@ -178,9 +178,36 @@ Icons: Email · Phone · Instagram
 - A free **Cal.com** account connected to your calendar
 - An email-sending service for the form and the confirmation email (chosen in step 5)
 
-## 4. Look & feel
+## 4. Look & feel ✅
 
-_To be filled in._
+### 4.1 Colors (no preference given → keep the brand colors, upgraded)
+- **Background:** deep cinematic black (#0A0807), with near-black warm panels (#140E0B)
+- **Accent:** copper / rose-gold taken from the logo (#C8896A, highlight #F0B48C), used for glows, thin borders and gradient buttons
+- **Text:** warm off-white (#F5EDE6), muted text (#A89A90)
+- **Texture:** subtle film grain, soft light flares, vignette at the edges
+
+### 4.2 Typography
+- **Headings:** Cinzel, a movie-poster serif close to the old small-caps titles
+- **Body:** Manrope, a clean modern sans that is easy to read
+- **Arabic:** IBM Plex Sans Arabic, right-to-left
+- _(We can swap fonts later if you prefer something else.)_
+
+### 4.3 Motion: maximum / 3D
+- **3D glowing logo sphere** (WebGL / Three.js) that rotates with the mouse and scroll, with copper particles around it
+- Scroll animations: headlines reveal like movie titles, sections fade and slide in, parallax depth
+- Glow and tilt hover effects on the service cards and buttons
+- Smooth scrolling
+- Phones get a lighter version so the page stays fast; motion is reduced for visitors whose devices ask for it (accessibility)
+
+### 4.4 Hero
+- Full-screen **showreel video in the background** (silent, looping, 15–30 s), with a dark overlay
+- On top: the 3D logo, **MNH XMotion**, the tagline, a **Start Project** button and the language switch (DE | AR | EN)
+- ⚠️ Needed from you: a 15–30 s showreel clip
+
+### 4.5 Portfolio
+- **Category tabs:** VFX · Cinematic Storytelling · Motion Graphic
+- A grid of videos per category; each preview plays on hover and opens full-screen on click
+- ⚠️ Needed from you: the videos (files or YouTube/Vimeo/Instagram links)
 
 ## 5. Tech & hosting
 

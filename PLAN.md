@@ -39,7 +39,7 @@ Cinematic video editing for businesses and content creators, using VFX, 3D anima
 **Location:** not shown on the site for now.
 
 **Contact details**
-- Email: mnhxmtion@gmail.com *(check the spelling: "xmtion" or "xmotion"?)*
+- Email: mnhxmotion@gmail.com
 - Phone / WhatsApp: +49 15566 920370
 
 **Booking flow (must keep from the old site)**
@@ -251,7 +251,7 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 
 ### Checklist: things to send / set up
 - [ ] **Fix GitHub access** (connect GitHub + install the Claude app on `nabilhassa/test`)
-- [ ] Confirm email spelling: mnhxmtion@gmail.com?
+- [x] Email confirmed: mnhxmotion@gmail.com
 - [x] New logo artwork (eye key visual), received
 - [ ] MN monogram alone (PNG/SVG, transparent), or I redraw it as SVG
 - [ ] Showreel clip (15–30 s)

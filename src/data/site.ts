@@ -2,7 +2,7 @@
 // Phase 4 adds German and Arabic versions of `content`.
 
 export const contact = {
-  email: 'mnhxmtion@gmail.com', // TODO: confirm spelling (mnhxmtion vs mnhxmotion)
+  email: 'mnhxmotion@gmail.com',
   phoneDisplay: '+49 15566 920370',
   phoneHref: 'tel:+4915566920370',
   whatsappHref: 'https://wa.me/4915566920370',

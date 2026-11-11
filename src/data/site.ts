@@ -101,7 +101,7 @@ export const content = {
     title: 'Start your project with MNH XMotion.',
     text: 'Answer a few questions about your project and creative direction. This helps us understand what you’re aiming for and how to elevate your visuals. The form takes around 2–3 minutes, and you can book a video call at the end to discuss your project whenever it suits you.',
     cta: 'Let’s start',
-    note: 'The interactive project brief and live call booking are added in Phase 3.',
+    time: '≈ 2–3 minutes · free strategy call',
   },
   contact: {
     kicker: 'Contact',

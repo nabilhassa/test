@@ -13,3 +13,6 @@ npm run build    # static site in dist/
 - Texts, contact details, portfolio videos: `src/data/site.ts`
 - Sections: `src/components/`
 - Colors & fonts: `src/styles/global.css`
+- Project brief questions & Cal.com link: `src/data/brief.ts`
+- Email sending (Netlify Function): `netlify/functions/brief.mts`
+- Account setup (Netlify, Resend, Cal.com): `SETUP.md`

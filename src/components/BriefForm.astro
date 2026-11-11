@@ -1,0 +1,274 @@
+---
+import { brief, booking } from '../data/brief';
+import { contact } from '../data/site';
+import Monogram from './Monogram.astro';
+
+const hasCalendar = Boolean(booking.calLink);
+const steps = brief.steps.filter((s) => !(s.when === 'no-calendar' && hasCalendar));
+const L = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const label = (o: string | { label: string }) => (typeof o === 'string' ? o : o.label);
+const isOther = (o: unknown) => typeof o === 'object' && o !== null && 'other' in o;
+const u = brief.ui;
+---
+
+<dialog class="brief" data-brief data-cal={booking.calLink} aria-label={brief.welcome.title}>
+  <form class="shell" data-form novalidate>
+    <header class="top">
+      <div class="brand"><Monogram class="bm" /><span>MNH <b>XMotion</b></span></div>
+      <div class="progress" data-progress hidden>
+        <span class="label"><span data-step-label>{u.step} 1 {u.of} {steps.length}</span></span>
+        <div class="bars">{steps.map(() => <i></i>)}</div>
+      </div>
+      <button type="button" class="close" data-close aria-label={u.close}>
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+      </button>
+    </header>
+
+    <!-- honeypot (hidden from people, bots fill it) -->
+    <label class="hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off" /></label>
+
+    <div class="panels">
+      <!-- Welcome -->
+      <section class="panel welcome" data-panel="welcome">
+        <p class="kicker">{brief.welcome.kicker}</p>
+        <h2 class="title">{brief.welcome.title}</h2>
+        <p class="lead">{brief.welcome.text}</p>
+        <div class="row">
+          <button type="button" class="btn btn-primary" data-next>
+            {brief.welcome.cta}
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
+          <span class="muted">{brief.welcome.time}</span>
+        </div>
+      </section>
+
+      {steps.map((s, si) => (
+        <section class="panel step" data-panel="step" data-step={s.id} hidden>
+          <p class="kicker">{u.step} {si + 1} {u.of} {steps.length}</p>
+          <h2 class="title">{s.title}</h2>
+          {s.questions.map((q) => (
+            <fieldset class="q" data-q={q.id} data-type={q.type} data-required={q.required ? '' : undefined} data-max={'max' in q ? q.max : undefined}>
+              <legend class:list={['ql', { 'sr-only': q.type === 'consent' }]}>{q.label}{q.required && <span class="req" aria-hidden="true">*</span>}</legend>
+              {'hint' in q && q.hint && <p class="hint">{q.hint}</p>}
+              {q.type === 'multi' && <p class="hint">{q.max ? u.upTo.replace('{n}', String(q.max)) : u.selectAll}</p>}
+
+              {(q.type === 'single' || q.type === 'multi') && (
+                <div class="opts">
+                  {q.options.map((o, oi) => (
+                    <label class="opt">
+                      <input type={q.type === 'single' ? 'radio' : 'checkbox'} name={q.id} value={isOther(o) ? '__other' : label(o)} />
+                      <span class="key" aria-hidden="true">{L[oi]}</span>
+                      <span class="txt">{label(o)}</span>
+                      <svg class="tick" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                    </label>
+                  ))}
+                  {q.options.some(isOther) && (
+                    <input class="other" type="text" name={`${q.id}__other`} placeholder={u.otherPlaceholder} aria-label={`${q.label}: ${u.otherPlaceholder}`} hidden />
+                  )}
+                </div>
+              )}
+
+              {q.type === 'textarea' && <textarea name={q.id} rows="4" placeholder={q.placeholder}></textarea>}
+
+              {q.type === 'select' && (
+                <div class="select">
+                  <select name={q.id}>
+                    <option value="">{q.placeholder}</option>
+                    {q.options.map((o) => <option>{o}</option>)}
+                  </select>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+                </div>
+              )}
+
+              {q.type === 'fields' && (
+                <div class="fields">
+                  {q.fields.map((f) => (
+                    <label class="field">
+                      <span>{f.label}{q.required && <span class="req" aria-hidden="true">*</span>}</span>
+                      <input type={f.type} name={f.id} autocomplete={f.autocomplete} required={q.required} />
+                    </label>
+                  ))}
+                </div>
+              )}
+
+              {q.type === 'consent' && (
+                <label class="consent">
+                  <input type="checkbox" name={q.id} value="yes" />
+                  <span class="box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 5 5 9-10" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                  <span>{q.label}<span class="req" aria-hidden="true">*</span></span>
+                </label>
+              )}
+
+              <p class="err" role="alert" data-err></p>
+            </fieldset>
+          ))}
+        </section>
+      ))}
+
+      <!-- Booking (Cal.com), shown after sending when a calendar is configured -->
+      <section class="panel booking" data-panel="booking" hidden>
+        <p class="kicker">✓ {brief.done.title}</p>
+        <h2 class="title">{brief.booking.title}</h2>
+        <p class="lead">{brief.booking.text}</p>
+        <div class="cal" id="cal-inline" data-cal-inline></div>
+      </section>
+
+      <!-- Done -->
+      <section class="panel done" data-panel="done" hidden>
+        <div class="seal" aria-hidden="true"><Monogram class="dm" /></div>
+        <h2 class="title">{brief.done.title}</h2>
+        <p class="lead" data-done-text data-cal-text={brief.done.textCalendar}>{brief.done.textNoCalendar}</p>
+        <button type="button" class="btn btn-ghost" data-close>{brief.done.close}</button>
+      </section>
+    </div>
+
+    <div class="error" data-error hidden>
+      <p class="et">{brief.error.title}</p>
+      <p>{brief.error.text}</p>
+      <div class="row">
+        <button type="button" class="btn btn-primary" data-retry>{brief.error.retry}</button>
+        <a class="btn btn-ghost" data-mailto href={`mailto:${contact.email}`}>{brief.error.email}</a>
+        <a class="btn btn-ghost" href={contact.whatsappHref} target="_blank" rel="noopener">{brief.error.whatsapp}</a>
+      </div>
+    </div>
+
+    <footer class="nav" data-nav hidden>
+      <button type="button" class="btn btn-ghost back" data-back>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        {u.back}
+      </button>
+      <span class="enter" aria-hidden="true">{u.pressEnter}</span>
+      <button type="button" class="btn btn-primary" data-next data-label-next={u.next} data-label-submit={u.submit} data-label-sending={u.sending}>
+        <span data-next-label>{u.next}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+    </footer>
+  </form>
+  <script type="application/json" data-brief-ui set:html={JSON.stringify({ ui: u, email: contact.email })} />
+</dialog>
+
+<script>
+  import '../scripts/brief';
+</script>
+
+<style>
+  .brief {
+    width: 100vw; height: 100dvh; max-width: none; max-height: none;
+    margin: 0; padding: 0; border: 0;
+    color: var(--text);
+    background:
+      radial-gradient(ellipse at 85% 0%, rgba(255,122,47,.16), transparent 50%),
+      radial-gradient(ellipse at 0% 100%, rgba(34,211,197,.10), transparent 50%),
+      radial-gradient(ellipse at 100% 100%, rgba(214,59,168,.10), transparent 50%),
+      #07070f;
+  }
+  .brief[open] { animation: open .6s var(--ease); }
+  @keyframes open { from { opacity: 0; transform: scale(1.02); } }
+  .brief::backdrop { background: #04040a; }
+  .shell { height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+  .progress[hidden], .nav[hidden] { display: none; }
+
+  .top { flex: none; display: flex; align-items: center; gap: 20px; padding: 18px var(--gutter); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); letter-spacing: .1em; font-size: 15px; white-space: nowrap; }
+  .brand b { color: var(--copper-light); }
+  .brand :global(.bm) { height: 20px; width: auto; filter: drop-shadow(0 0 8px rgba(255,122,47,.7)); }
+  .progress { flex: 1; display: flex; flex-direction: column; gap: 6px; max-width: 520px; margin-inline: auto; }
+  .progress .label { font-size: 12px; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; text-align: center; }
+  .bars { display: flex; gap: 6px; }
+  .bars i { flex: 1; height: 3px; border-radius: 3px; background: rgba(255,255,255,.12); transition: background .5s, box-shadow .5s; }
+  .bars i.on { background: linear-gradient(90deg, var(--copper-light), var(--copper)); box-shadow: 0 0 10px rgba(255,122,47,.6); }
+  .close { margin-inline-start: auto; width: 44px; height: 44px; flex: none; border-radius: 50%; border: 1px solid var(--line); background: rgba(255,255,255,.04); display: grid; place-items: center; }
+  .close svg { width: 20px; height: 20px; }
+  .close:hover { border-color: var(--copper); }
+
+  .panels { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .panel { width: min(760px, 100% - 2 * var(--gutter)); margin: 0 auto; padding: clamp(32px, 7vh, 72px) 0 40px; animation: in .55s var(--ease); }
+  @keyframes in { from { opacity: 0; transform: translateY(18px); } }
+  .panel[hidden] { display: none; }
+  .title { font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.4vw, 46px); line-height: 1.1; margin: 0 0 18px; }
+  html[lang='ar'] .title { font-family: var(--font-ar); }
+  .lead { color: #cfcce0; font-size: 17px; margin: 0 0 32px; }
+  .muted { color: var(--muted); font-size: 14px; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+
+  .q { border: 0; padding: 0; margin: 0 0 40px; min-width: 0; }
+  .ql { padding: 0; font-weight: 700; font-size: clamp(19px, 2.2vw, 23px); line-height: 1.35; margin-bottom: 8px; }
+  .req { color: var(--copper); margin-inline-start: 4px; }
+  .hint { color: var(--muted); margin: 0 0 14px; font-size: 15px; font-style: italic; }
+  .opts { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 14px; }
+  .opt {
+    position: relative; display: flex; align-items: center; gap: 14px;
+    min-height: 54px; padding: 12px 46px 12px 14px; max-width: 100%;
+    border: 1px solid rgba(255,255,255,.14); border-radius: 12px;
+    background: rgba(255,255,255,.035); cursor: pointer;
+    transition: border-color .25s, background .25s, box-shadow .3s, transform .3s var(--ease);
+  }
+  .opt:hover { border-color: rgba(255,178,122,.5); background: rgba(255,178,122,.06); }
+  .opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .key { flex: none; width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; font-size: 13px; font-weight: 800; background: rgba(255,255,255,.12); color: #e8e6f3; transition: background .25s, color .25s; }
+  .txt { font-size: 16.5px; }
+  .tick { position: absolute; right: 14px; width: 20px; height: 20px; color: var(--copper-light); opacity: 0; transform: scale(.6); transition: opacity .25s, transform .3s var(--ease); }
+  html[dir='rtl'] .tick { right: auto; left: 14px; }
+  html[dir='rtl'] .opt { padding: 12px 14px 12px 46px; }
+  .opt:has(input:checked) { border-color: var(--copper); background: rgba(255,122,47,.12); box-shadow: 0 0 0 1px var(--copper) inset, 0 0 24px -6px rgba(255,122,47,.6); }
+  .opt:has(input:checked) .key { background: var(--copper); color: #160a03; }
+  .opt:has(input:checked) .tick { opacity: 1; transform: none; }
+  .opt:has(input:focus-visible) { outline: 2px solid var(--teal); outline-offset: 3px; }
+
+  input.other, textarea, .select select, .field input {
+    width: 100%; font: inherit; color: var(--text);
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.16); border-radius: 12px;
+    padding: 14px 16px; transition: border-color .25s, box-shadow .25s;
+  }
+  input.other { max-width: 460px; }
+  textarea { resize: vertical; min-height: 120px; margin-top: 10px; }
+  input.other:focus, textarea:focus, .select select:focus, .field input:focus { outline: none; border-color: var(--copper); box-shadow: 0 0 0 3px rgba(255,122,47,.18); }
+  .select { position: relative; margin-top: 10px; max-width: 460px; }
+  .select select { appearance: none; padding-inline-end: 44px; cursor: pointer; }
+  .select select option { background: #11111d; }
+  .select svg { position: absolute; right: 14px; top: 50%; translate: 0 -50%; width: 20px; height: 20px; pointer-events: none; color: var(--muted); }
+  html[dir='rtl'] .select svg { right: auto; left: 14px; }
+  .fields { display: grid; gap: 12px; margin-top: 12px; }
+  .field > span { display: block; font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+  .consent { display: flex; gap: 14px; align-items: flex-start; cursor: pointer; font-size: 16px; }
+  .consent input { position: absolute; opacity: 0; }
+  .box { flex: none; width: 26px; height: 26px; border-radius: 7px; border: 1.5px solid rgba(255,255,255,.35); display: grid; place-items: center; color: #160a03; transition: background .2s, border-color .2s; margin-top: 1px; }
+  .box svg { width: 16px; height: 16px; opacity: 0; }
+  .consent input:checked + .box { background: var(--copper); border-color: var(--copper); }
+  .consent input:checked + .box svg { opacity: 1; }
+  .consent input:focus-visible + .box { outline: 2px solid var(--teal); outline-offset: 3px; }
+  .err { margin: 10px 0 0; color: #ff8a7a; font-size: 14px; min-height: 0; }
+  .err:empty { display: none; }
+  .q.invalid .opt, .q.invalid .field input:invalid, .q.invalid select { border-color: rgba(255,110,90,.6); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .nav { flex: none; display: flex; align-items: center; gap: 16px; padding: 14px var(--gutter); border-top: 1px solid var(--line); background: rgba(7,7,15,.85); backdrop-filter: blur(10px); }
+  .nav .back { min-height: 46px; padding: 10px 18px; }
+  .nav [data-next] { margin-inline-start: auto; min-height: 50px; }
+  .nav .back[disabled] { visibility: hidden; }
+  .enter { margin-inline-start: auto; color: var(--muted); font-size: 13px; }
+  .enter + [data-next] { margin-inline-start: 0; }
+  @media (hover: none) { .enter { display: none; } .enter + [data-next] { margin-inline-start: auto; } }
+  html[dir='rtl'] .back svg, html[dir='rtl'] [data-next] svg { transform: scaleX(-1); }
+  [data-next][aria-busy='true'] { opacity: .7; pointer-events: none; }
+
+  .cal { min-height: 560px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: rgba(255,255,255,.02); }
+  .done { text-align: center; padding-top: clamp(60px, 14vh, 140px); }
+  .seal { width: 110px; height: 110px; margin: 0 auto 28px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, rgba(255,122,47,.22), transparent 70%); box-shadow: 0 0 0 1px var(--line-strong), 0 0 60px -10px rgba(255,122,47,.6); animation: pop .9s var(--ease); }
+  .seal :global(.dm) { height: 50px; width: auto; filter: drop-shadow(0 0 10px rgba(255,122,47,.8)); }
+  @keyframes pop { from { transform: scale(.6); opacity: 0; } }
+  .done .lead { max-width: 560px; margin-inline: auto; }
+
+  .error { width: min(760px, 100% - 2 * var(--gutter)); margin: 0 auto 16px; padding: 18px 20px; border-radius: 14px; border: 1px solid rgba(255,110,90,.45); background: rgba(255,90,70,.08); }
+  .error[hidden] { display: none; }
+  .error p { margin: 0 0 12px; color: #e9d5d1; font-size: 15px; }
+  .error .et { font-weight: 800; color: #ffb4a8; }
+  .error .btn { min-height: 44px; padding: 10px 18px; font-size: 13px; }
+
+  @media (max-width: 640px) {
+    .brand span { display: none; }
+    .top { gap: 14px; }
+    .opt { width: 100%; }
+    .lead { font-size: 16px; }
+  }
+</style>

@@ -1,9 +1,9 @@
 ---
-import { content, contact } from '../data/site';
+import { content } from '../data/site';
 const s = content.start;
 ---
 
-<!-- Placeholder for the Phase 3 multi-step project brief + Cal.com booking -->
+<!-- Teaser for the project brief; the button opens the multi-step form (BriefForm.astro) -->
 <section class="section" id="start">
   <div class="wrap">
     <div class="panel reveal">
@@ -12,12 +12,12 @@ const s = content.start;
       <h2 class="h2 reveal" data-split>{s.title}</h2>
       <p class="text">{s.text}</p>
       <div class="actions">
-        <a href={`mailto:${contact.email}?subject=New%20project%20%E2%80%94%20MNH%20XMotion`} class="btn btn-primary">
+        <button type="button" class="btn btn-primary" data-open-brief>
           {s.cta}
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
+        </button>
       </div>
-      <p class="note">{s.note}</p>
+      <p class="note">{s.time}</p>
     </div>
   </div>
 </section>

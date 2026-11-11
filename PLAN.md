@@ -244,7 +244,7 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 |-------|-----------------|----------------|
 | ✅ **1. Foundation** | Astro project, colors/fonts, all 8 sections with the old texts (EN), placeholder videos, mobile layout | Nothing, can start now |
 | ✅ **2. Cinematic layer** | 3D glowing logo sphere, scroll and title animations, hover glows, film grain, showreel hero | Logo file, showreel clip (placeholders until then) |
-| **3. Project brief + booking** | Multi-step form (16 questions → personal info → Cal.com slot), emails to you and the client, WhatsApp button | Cal.com + Resend accounts (I'll guide you) |
+| ✅ **3. Project brief + booking** (code done; accounts in `SETUP.md`) | Multi-step form (16 questions → personal info → Cal.com slot), emails to you and the client, WhatsApp button | Cal.com + Resend accounts (I'll guide you) |
 | **4. Languages** | German and Arabic versions (Arabic right-to-left), working language switch | You review the translations |
 | **5. Legal, SEO & polish** | Impressum, Datenschutz, analytics, SEO tags, speed and accessibility checks | Name and address for the Impressum |
 | **6. Launch** | Connect GitHub → Netlify, connect the domain, final test on phone and desktop | Netlify account, domain purchase |
@@ -263,6 +263,6 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
   - Until Bunny Stream is set up, the site embeds them via `https://drive.google.com/file/d/<ID>/preview` (sharing must be "Anyone with the link")
   - [x] Categories: any order is fine (split across VFX / Cinematic / Motion; titles "Project 01–04" for now)
 - [x] Instagram: @mnhxmotion
-- [ ] Options of "How did you hear about us?"
+- [ ] Options of "How did you hear about us?" (using for now: Instagram, TikTok, YouTube, Google search, Recommendation / friend, Other)
 - [ ] Name and postal address for the Impressum
-- [ ] Accounts: Netlify, Cal.com, Resend, Bunny Stream, domain registrar (later phases)
+- [ ] Accounts: Netlify, Resend, Cal.com (step-by-step in `SETUP.md`); Bunny Stream and domain later

@@ -90,13 +90,19 @@ export function initIris(canvas: HTMLCanvasElement, img: HTMLImageElement, opts:
       ctx.arc(x, y, size, 0, Math.PI * 2);
       ctx.fill();
     }
-    if (visible && !opts.reduced) raf = requestAnimationFrame(draw);
+    if (visible && !stopped && !opts.reduced) raf = requestAnimationFrame(draw);
   };
 
+  let stopped = false;
   new IntersectionObserver(([e]) => {
-    visible = e.isIntersecting;
+    visible = e.isIntersecting && !stopped;
     cancelAnimationFrame(raf);
     if (visible) { last = performance.now(); raf = requestAnimationFrame(draw); }
   }).observe(canvas);
   raf = requestAnimationFrame(draw);
+  return () => {
+    stopped = true;
+    cancelAnimationFrame(raf);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
 }

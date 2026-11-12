@@ -19,6 +19,7 @@ const L = content[getLang(Astro.url)];
 ---
 
 <Base title={L.meta.title} description={L.meta.description}>
+  <canvas class="bg-stars" data-stars aria-hidden="true"></canvas>
   <Intro />
   <Header />
   <main>

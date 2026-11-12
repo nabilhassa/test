@@ -39,14 +39,3 @@ export const planet = {
 
 export const toPath = (pts: Pt[]) => `M${pts.map(([x, y]) => `${x} ${y}`).join('L')}Z`;
 
-/** Square version of the mark (widened to 1:1) – the default flat logo */
-const K = SIZE.h / SIZE.w;
-const widen = (pts: Pt[]): Pt[] => pts.map(([x, y]) => [Math.round(x * K), y]);
-export const squarePieces = {
-  chevron: widen(pieces.chevron),
-  left: widen(pieces.left),
-  wedge: widen(pieces.wedge),
-  inner: widen(pieces.inner),
-};
-export const SQUARE = { w: SIZE.h, h: SIZE.h };
-export const squarePlanet = { ...planet, cx: Math.round(planet.cx * K) };

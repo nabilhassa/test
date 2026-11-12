@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { squarePieces as pieces, order, SQUARE as SIZE, toPath } from '../data/monogram';
+import { pieces, order, SIZE, toPath } from '../data/monogram';
 
 // Favicon built from the same monogram geometry (copper, like the original icon, on a dark tile)
 export const GET: APIRoute = () => {

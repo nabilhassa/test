@@ -2,7 +2,7 @@
 // The MNH monogram as SVG, in one glowing copper colour (like the original icon).
 //  - "solid": filled shapes – header, placeholders, fallback
 //  - "draw":  lines that draw themselves, then fill – intro animation
-import { pieces, order, SIZE, planet, squarePieces, SQUARE, squarePlanet, toPath } from '../data/monogram';
+import { pieces, order, SIZE, planet, toPath } from '../data/monogram';
 
 interface Props {
   variant?: 'solid' | 'draw';
@@ -13,19 +13,15 @@ interface Props {
   color?: string;
   /** Extra line weight in screen pixels (thickens the bars a little at small sizes) */
   line?: number;
-  /** Square (1:1) version – the default flat logo. false = original proportions */
-  square?: boolean;
 }
-const { variant = 'solid', withPlanet = false, class: cls, title, color = '#ffb27a', line = 0.6, square = true } = Astro.props;
+const { variant = 'solid', withPlanet = false, class: cls, title, color = '#ffb27a', line = 0.6 } = Astro.props;
 const pad = 30;
-const P = square ? squarePieces : pieces;
-const B = square ? SQUARE : SIZE;
-const { cx, cy, r, ring } = square ? squarePlanet : planet;
+const { cx, cy, r, ring } = planet;
 ---
 
 <svg
   class={cls}
-  viewBox={`${-pad} ${-pad} ${B.w + pad * 2} ${B.h + pad * 2}`}
+  viewBox={`${-pad} ${-pad} ${SIZE.w + pad * 2} ${SIZE.h + pad * 2}`}
   role={title ? 'img' : undefined}
   aria-hidden={title ? undefined : 'true'}
   aria-label={title}
@@ -36,7 +32,7 @@ const { cx, cy, r, ring } = square ? squarePlanet : planet;
   {order.map((k) => (
     <path
       class={`piece ${k}`}
-      d={toPath(P[k])}
+      d={toPath(pieces[k])}
       pathLength={variant === 'draw' ? 1 : undefined}
       stroke-width={line}
       vector-effect="non-scaling-stroke"

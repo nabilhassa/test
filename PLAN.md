@@ -268,7 +268,7 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 - [ ] Name and postal address for the Impressum
 - [x] Netlify: live at https://mnhxmotion.netlify.app
 - [x] Resend API key added in Netlify (`RESEND_API_KEY`)
-- [ ] Cal.com account + booking link (step-by-step in `SETUP.md`)
+- [x] Cal.com: https://cal.com/mnh-xmotion/30min (connected to the brief)
 - [x] Own domain: https://mnhxmotion.com (old netlify.app address forwards to it)
 - [ ] Verify mnhxmotion.com in Resend → client confirmation emails
 - [ ] Later: Bunny Stream

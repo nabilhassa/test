@@ -14,7 +14,7 @@ export type Step = { id: string; title: string; questions: Question[]; when?: 'n
 export const booking = {
   // Cal.com booking link, e.g. 'mnhxmotion/strategy-call'.
   // While empty, the form asks for preferred days/time instead and you confirm the call by email.
-  calLink: '',
+  calLink: 'mnh-xmotion/30min',
 };
 
 const o = (label: string) => ({ label, other: true }) as const;

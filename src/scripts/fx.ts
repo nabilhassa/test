@@ -130,32 +130,9 @@ if (mono) {
   io.observe(mono);
 }
 
-// ---- Page background: twinkling starfield + drifting motes ----
-const stars = document.querySelector<HTMLCanvasElement>('[data-stars]');
-if (stars) import('./starfield').then(({ initStarfield }) => initStarfield(stars, { mobile: window.innerWidth < 760, reduced }));
-
-// ---- Hero: light 2D iris particles first, then the WebGL vortex takes over once the page has loaded ----
+// ---- Iris particles in the hero ----
 const irisCanvas = document.querySelector<HTMLCanvasElement>('[data-iris]');
-const vortexCanvas = document.querySelector<HTMLCanvasElement>('[data-vortex]');
 const irisImg = document.querySelector<HTMLImageElement>('[data-parallax]');
 if (irisCanvas && irisImg) {
-  const mobile = window.innerWidth < 760;
-  const stopIris = import('./irisParticles').then(({ initIris }) => initIris(irisCanvas, irisImg, { mobile, reduced }));
-  if (vortexCanvas && !reduced) {
-    const start = () => {
-      import('./vortex').then(async ({ initVortex }) => {
-        const introDelay = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--intro-delay')) || 0;
-        const ok = initVortex(vortexCanvas, irisImg, { mobile, startDelay: introDelay * 1000 });
-        if (!ok) return;
-        vortexCanvas.classList.add('on');
-        // let the vortex fade in, then retire the 2D particles
-        setTimeout(async () => {
-          irisCanvas.classList.add('off');
-          (await stopIris)?.();
-        }, 2200);
-      });
-    };
-    if (document.readyState === 'complete') setTimeout(start, 200);
-    else window.addEventListener('load', () => setTimeout(start, 200), { once: true });
-  }
+  import('./irisParticles').then(({ initIris }) => initIris(irisCanvas, irisImg, { mobile: window.innerWidth < 760, reduced }));
 }

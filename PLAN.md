@@ -246,9 +246,8 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 | ✅ **2. Cinematic layer** | 3D glowing logo sphere, scroll and title animations, hover glows, film grain, showreel hero | Logo file, showreel clip (placeholders until then) |
 | ✅ **3. Project brief + booking** (code done; accounts in `SETUP.md`) | Multi-step form (16 questions → personal info → Cal.com slot), emails to you and the client, WhatsApp button | Cal.com + Resend accounts (I'll guide you) |
 | ✅ **4. Languages** (EN `/`, DE `/de/`, AR `/ar/`) | German and Arabic versions (Arabic right-to-left), working language switch | You review the translations |
-| ⏳ **5. Animations & effects** | Particle vortex around the iris, live starfield + drifting motes, star flare behind the 3D planet (from the Vortex reference) — more on request | References from you |
-| **6. Legal, SEO & polish** | Impressum, Datenschutz, analytics, SEO tags, speed and accessibility checks | Name and address for the Impressum |
-| ✅ **Launch** | Connect GitHub → Netlify, connect the domain, final test on phone and desktop | Netlify account, domain purchase |
+| **5. Legal, SEO & polish** | Impressum, Datenschutz, analytics, SEO tags, speed and accessibility checks | Name and address for the Impressum |
+| **6. Launch** | Connect GitHub → Netlify, connect the domain, final test on phone and desktop | Netlify account, domain purchase |
 
 ### Checklist: things to send / set up
 - [ ] **Fix GitHub access** (connect GitHub + install the Claude app on `nabilhassa/test`)

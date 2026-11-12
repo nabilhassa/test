@@ -31,7 +31,6 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
       data-parallax
     />
     <canvas class="iris" data-iris></canvas>
-    <canvas class="vortex" data-vortex></canvas>
     <div class="shade"></div>
   </div>
 
@@ -135,10 +134,7 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
     to { opacity: 1; transform: none; filter: blur(0); }
   }
   .hero .reveal { transition-delay: calc(var(--d, 0s) + var(--intro-delay, 0s) + .5s); }
-  .iris, .vortex { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; transition: opacity 1.4s ease; }
-  .vortex { opacity: 0; }
-  .vortex.on { opacity: 1; }
-  .iris.off { opacity: 0; }
+  .iris { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; }
   .l1 { font-size: clamp(30px, 5vw, 64px); letter-spacing: .32em; color: rgba(243,241,250,.9); font-weight: 500; }
   .l2 { font-size: min(max(56px, 12vw), 168px, calc((100vw - 48px) / 5.3)); filter: drop-shadow(0 0 30px rgba(255,122,47,.35)); padding-bottom: .06em; }
   .lead { font-size: clamp(19px, 2.1vw, 25px); font-weight: 600; max-width: 620px; margin: 0 0 10px; line-height: 1.45; }
@@ -225,7 +221,6 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
   // Gentle parallax on the key visual
   const img = document.querySelector<HTMLElement>('[data-parallax]');
   const iris = document.querySelector<HTMLElement>('[data-iris]');
-  const vortex = document.querySelector<HTMLElement>('[data-vortex]');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (img && !reduce) {
     window.addEventListener(
@@ -234,7 +229,6 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
         const y = Math.min(window.scrollY, window.innerHeight);
         img.style.transform = `translateY(${y * 0.25}px)`;
         if (iris) iris.style.transform = `translateY(${y * 0.25}px)`;
-        if (vortex) vortex.style.transform = `translateY(${y * 0.25}px)`;
       },
       { passive: true },
     );

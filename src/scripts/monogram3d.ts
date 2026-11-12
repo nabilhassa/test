@@ -97,32 +97,6 @@ export function initMonogram(canvas: HTMLCanvasElement, opts: { bg: string; mobi
   logo.add(planet);
   scene.add(logo);
 
-  // ---- Anamorphic star flare behind the planet (eclipse glint) ----
-  const flareMat = new THREE.ShaderMaterial({
-    uniforms: { uColor: { value: new THREE.Color('#ffd2a8') }, uGlow: { value: 0.32 }, uSpikes: { value: 0.74 } },
-    vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-    fragmentShader: `uniform vec3 uColor; uniform float uGlow, uSpikes; varying vec2 vUv;
-      void main(){
-        vec2 p = vUv * 2.0 - 1.0;
-        float r = length(p);
-        float core = pow(max(0.0, 1.0 - r), 3.0);
-        float halo = exp(-r * r * 6.0) * 0.35;
-        float sx = exp(-abs(p.y) * 90.0) * exp(-abs(p.x) * 1.6);
-        float sy = exp(-abs(p.x) * 90.0) * exp(-abs(p.y) * 1.6);
-        float i = (core * 2.0 + halo + (sx + sy) * uSpikes) * uGlow;
-        gl_FragColor = vec4(uColor * i, i);
-      }`,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-    toneMapped: false,
-  });
-  const flare = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), flareMat);
-  flare.scale.setScalar(2.8);
-  flare.renderOrder = -1;
-  scene.add(flare);
-  const planetWorld = new THREE.Vector3();
-
   // ---- Star dust ----
   const COUNT = opts.mobile ? 500 : 1400;
   const pos = new Float32Array(COUNT * 3);
@@ -212,11 +186,6 @@ export function initMonogram(canvas: HTMLCanvasElement, opts: { bg: string; mobi
     logo.position.y = Math.sin(t * 0.8) * 0.06;
     planet.children[0].rotation.y = t * 0.3;
     ringDust.rotation.z = t * 0.12;
-    // keep the flare centred behind the planet and facing the camera; slow breathing glow
-    planet.getWorldPosition(planetWorld);
-    flare.position.copy(planetWorld).addScaledVector(camera.position.clone().sub(planetWorld).normalize(), -0.05);
-    flare.quaternion.copy(camera.quaternion);
-    flareMat.uniforms.uGlow.value = 0.3 + 0.05 * Math.sin(t * 1.3);
     rings.forEach((r, i) => (r.rotation.z = t * (0.05 + i * 0.03)));
     dust.rotation.y = t * 0.03;
     composer.render();

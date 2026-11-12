@@ -25,15 +25,15 @@ const CONFIG = {
   swirl: 0.8,
   spread: 0.89,
   depth: 1.2,
-  streamSpeed: 3.8,
+  streamSpeed: 5.2,
   pulseFreq: 8,
   coreFall: 0.02,
   twinkleSpeed: 2.75,
   flipSpeed: 4,
   glyphMix: 0.12,
-  pointSize: 2.4,
-  coreBoost: 2.2,
-  brightness: 1.05,
+  pointSize: 3.1,
+  coreBoost: 3.0,
+  brightness: 1.7,
   saturation: 0.56,
   digitSharp: 1.2,
   haloAmt: 0.8,
@@ -41,26 +41,42 @@ const CONFIG = {
   coreColor: '#9ff5ec', // bright teal at the lens edge
   strandColor: '#4fd9d0', // the iris' own teal
   sparkColor: '#ff9a5a', // copper sparks like the iris rim
-  autoSpin: 0.105,
+  autoSpin: 0.32, // faster churn
+  waveSpeed: 1.6, // strands ripple and wave
+  curlAmp: 0.55, // organic braiding flow (from the reference)
+  breathe: 0.035, // the whole ring gently pulses in and out
 };
 
 const VERT = /* glsl */ `
 attribute float aAngle; attribute float aFil; attribute float aS; attribute float aSeed; attribute float aGlyph;
 uniform float iTime, uAlpha;
 uniform vec2 uRes;
-uniform float uCoreR, uMaxR, uExpo, uSwirl, uSpread, uDepth;
+uniform float uCoreR, uMaxR, uExpo, uSwirl, uSpread, uDepth, uWave, uCurl, uBreathe;
 uniform float uStreamSpeed, uPulseFreq, uCoreFall, uTwinkle, uFlipSpeed, uGlyphMix, uSize, uCoreBoost, uBright, uSat;
 uniform vec3 uCore, uStrand, uSpark;
 varying vec3 vCol; varying float vBright; varying float vGlyph; varying float vDigit;
 #define TAU 6.2831853
 float hash(float n){ return fract(sin(n) * 43758.5453123); }
+vec3 flow(vec3 p, float t){
+  vec3 q = p;
+  q.x += 0.9 * sin(t + 1.7 * p.y);
+  q.y += 0.9 * cos(t + 1.7 * p.z);
+  q.z += 0.9 * sin(t + 1.7 * p.x);
+  q.x += 0.5 * cos(t * 1.3 + 2.9 * q.z);
+  q.z += 0.5 * sin(t * 1.1 + 2.9 * q.y);
+  return q - p;
+}
 void main(){
   float s = aS;
   float radius = uCoreR + (uMaxR - uCoreR) * pow(s, uExpo);
+  radius *= 1.0 + uBreathe * sin(iTime * 1.4 + aFil * 6.2831) * s;
   float ang = aAngle + uSwirl * radius * (0.6 + 0.4 * aFil);
-  ang += sin(s * 6.0 + aFil * 30.0) * uSpread * (0.25 + 0.75 * s);
+  ang += sin(s * 6.0 + aFil * 30.0 + iTime * uWave) * uSpread * (0.25 + 0.75 * s);
   vec3 pos = vec3(cos(ang), sin(ang), 0.0) * radius;
   pos.z = (aFil - 0.5) * uDepth * (0.4 + radius * 0.12);
+  vec3 fp = pos * 0.05 + vec3(0.0, 0.0, aFil * 12.0);
+  vec3 f = flow(fp, iTime * 0.35) * uCurl * (0.2 + 1.3 * s);
+  pos.xy += f.xy;
   vec4 mv = modelViewMatrix * vec4(pos, 1.0);
 
   float coreGlow = exp(-radius * radius * uCoreFall);
@@ -186,6 +202,9 @@ export function initVortex(canvas: HTMLCanvasElement, img: HTMLImageElement, opt
       uSwirl: { value: CONFIG.swirl },
       uSpread: { value: CONFIG.spread },
       uDepth: { value: CONFIG.depth },
+      uWave: { value: CONFIG.waveSpeed },
+      uCurl: { value: CONFIG.curlAmp },
+      uBreathe: { value: CONFIG.breathe },
       uStreamSpeed: { value: CONFIG.streamSpeed },
       uPulseFreq: { value: Math.round(CONFIG.pulseFreq) },
       uCoreFall: { value: CONFIG.coreFall },
@@ -212,7 +231,7 @@ export function initVortex(canvas: HTMLCanvasElement, img: HTMLImageElement, opt
 
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), opts.mobile ? 0.18 : 0.22, 0.25, 0.05);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), opts.mobile ? 0.32 : 0.38, 0.3, 0.04);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 

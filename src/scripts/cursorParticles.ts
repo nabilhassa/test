@@ -3,10 +3,11 @@
 //  - Phone: every tap pulls the particles to that spot (with a small burst); they follow the finger while it moves.
 // When the pointer is idle, the particles drift freely again. 2D canvas, paused when the tab is hidden.
 
-type P = { x: number; y: number; vx: number; vy: number; r: number; c: number; pull: number; spin: number; seed: number };
+type P = { x: number; y: number; vx: number; vy: number; r: number; c: number; pull: number; spin: number; seed: number; follow: boolean };
 type Spark = { x: number; y: number; vx: number; vy: number; life: number; max: number; r: number; c: number };
 
 const COLORS = ['255,178,122', '255,122,47', '34,211,197', '214,59,168', '243,241,250'];
+const FOLLOW_SHARE = 0.32; // only about a third of the particles gather at the mouse / tap, the rest keep drifting
 
 export function initCursorParticles(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d');
@@ -52,6 +53,7 @@ export function initCursorParticles(canvas: HTMLCanvasElement) {
     pull: rand(0.35, 1), // how strongly this particle follows the pointer
     spin: Math.random() < 0.5 ? -1 : 1, // swirl direction around the pointer
     seed: Math.random() * 1000,
+    follow: Math.random() < FOLLOW_SHARE,
   }));
   const sparks: Spark[] = [];
 
@@ -115,7 +117,8 @@ export function initCursorParticles(canvas: HTMLCanvasElement) {
       p.vx += Math.cos(t * 0.6 + p.seed) * 0.012 * dt;
       p.vy += Math.sin(t * 0.5 + p.seed * 1.3) * 0.012 * dt;
 
-      if (ptr.active) {
+      const chasing = ptr.active && p.follow;
+      if (chasing) {
         const dx = ptr.x - p.x;
         const dy = ptr.y - p.y;
         const d = Math.hypot(dx, dy) || 1;
@@ -133,14 +136,14 @@ export function initCursorParticles(canvas: HTMLCanvasElement) {
         }
       }
 
-      const damp = Math.pow(ptr.active ? 0.9 : 0.975, dt);
+      const damp = Math.pow(chasing ? 0.9 : 0.975, dt);
       p.vx *= damp;
       p.vy *= damp;
       p.x += p.vx * dt;
       p.y += p.vy * dt;
 
       // wrap around the screen edges while drifting
-      if (!ptr.active) {
+      if (!chasing) {
         if (p.x < -20) p.x = W + 20;
         if (p.x > W + 20) p.x = -20;
         if (p.y < -20) p.y = H + 20;
@@ -148,8 +151,8 @@ export function initCursorParticles(canvas: HTMLCanvasElement) {
       }
 
       const tw = 0.55 + 0.45 * Math.sin(t * 2 + p.seed);
-      const size = p.r * 6 * (ptr.active ? 1.15 : 1);
-      ctx.globalAlpha = 0.55 * tw + (ptr.active ? 0.25 : 0);
+      const size = p.r * 6 * (chasing ? 1.15 : 1);
+      ctx.globalAlpha = 0.55 * tw + (chasing ? 0.25 : 0);
       ctx.drawImage(sprites[p.c], p.x - size / 2, p.y - size / 2, size, size);
     }
 

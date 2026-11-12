@@ -1,7 +1,7 @@
 // Swirling star dust that orbits the iris of the eye key visual (2D canvas, additive glow).
 // The orbit centre is computed from where the eye image is actually drawn (object-fit: cover).
 
-const IRIS = { x: 0.505, y: 0.495, r: 0.2 }; // iris centre + radius as fractions of the image
+const IRIS = { x: 908 / 1792, y: 1197 / 2400, r: 0.2 }; // iris centre + radius as fractions of the image
 
 export function initIris(canvas: HTMLCanvasElement, img: HTMLImageElement, opts: { mobile: boolean; reduced: boolean }) {
   const ctx = canvas.getContext('2d');

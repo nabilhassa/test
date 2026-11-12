@@ -33,7 +33,7 @@ const year = new Date().getFullYear();
 
   .wa {
     position: fixed; z-index: 60;
-    right: 22px; bottom: 22px;
+    left: 22px; bottom: 22px;
     width: 58px; height: 58px; border-radius: 50%;
     display: grid; place-items: center;
     color: #fff;
@@ -41,10 +41,9 @@ const year = new Date().getFullYear();
     box-shadow: 0 10px 30px -6px rgba(31,170,85,.7), 0 0 0 1px rgba(255,255,255,.15) inset;
     transition: transform .4s var(--ease);
   }
-  html[dir='rtl'] .wa { right: auto; left: 22px; }
   .wa:hover { transform: scale(1.08); }
   .wa svg { width: 30px; height: 30px; }
   .wa::before { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #3ce07f; animation: ping 2.6s var(--ease) infinite; }
   @keyframes ping { 0% { opacity: .8; transform: scale(1); } 80%, 100% { opacity: 0; transform: scale(1.6); } }
-  @media (max-width: 640px) { .wa { right: 16px; bottom: 16px; width: 54px; height: 54px; } }
+  @media (max-width: 640px) { .wa { left: 16px; bottom: 16px; width: 54px; height: 54px; } }
 </style>

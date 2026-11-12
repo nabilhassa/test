@@ -179,22 +179,25 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
 </style>
 
 <script>
-  // Keep "MNH" and "XMotion" on one line each and fully visible, even with enlarged phone text
+  // Keep "MNH" and "XMotion" on one line each and fully visible, even when the phone or an in-app browser
+  // enlarges text: measure the real width of the letters and scale the whole line down to fit.
   const title = document.querySelector<HTMLElement>('.hero .display');
   if (title) {
+    const lines = [...title.querySelectorAll<HTMLElement>(':scope > span')];
     const fit = () => {
-      title.querySelectorAll<HTMLElement>(':scope > span').forEach((line) => {
-        line.style.fontSize = '';
-        const avail = title.clientWidth;
-        const need = line.scrollWidth;
-        if (need > avail && avail > 0) {
-          const fs = parseFloat(getComputedStyle(line).fontSize);
-          line.style.fontSize = `${Math.floor(fs * (avail / need) * 0.98)}px`;
-        }
+      const avail = title.clientWidth;
+      if (!avail) return;
+      lines.forEach((line) => {
+        line.style.zoom = '';
+        // offsetWidth ignores the entrance animation's transforms, so this is the true width
+        const need = [...line.querySelectorAll<HTMLElement>('.ch')].reduce((w, ch) => w + ch.offsetWidth, 0);
+        if (need > avail) line.style.zoom = String(Math.floor((avail / need) * 1000) / 1000);
       });
     };
     fit();
     document.fonts?.ready.then(fit);
+    window.addEventListener('load', fit);
+    window.addEventListener('resize', fit);
     new ResizeObserver(fit).observe(title);
   }
 

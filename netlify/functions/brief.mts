@@ -85,22 +85,38 @@ export function renderOwnerEmail(a: Answers) {
   return { html, text };
 }
 
-const CONFIRM: Record<string, { subject: string; hi: string; body: string; sign: string }> = {
+const CONFIRM: Record<string, { subject: string; hi: string; body: string; sign: string; dir: 'ltr' | 'rtl' }> = {
   en: {
     subject: 'We received your project brief, MNH XMotion',
     hi: 'Hi',
     body: 'thank you for your project brief! We’re reviewing your answers and will get back to you shortly. If you booked a call, you’ll find the details in a separate email.',
     sign: 'MNH XMotion',
+    dir: 'ltr',
+  },
+  de: {
+    subject: 'Wir haben dein Projekt-Briefing erhalten, MNH XMotion',
+    hi: 'Hallo',
+    body: 'danke für dein Projekt-Briefing! Wir sehen uns deine Antworten an und melden uns in Kürze bei dir. Falls du einen Call gebucht hast, findest du die Details in einer separaten E-Mail.',
+    sign: 'MNH XMotion',
+    dir: 'ltr',
+  },
+  ar: {
+    subject: 'استلمنا ملخّص مشروعك، MNH XMotion',
+    hi: 'مرحبًا',
+    body: 'شكرًا لك على ملخّص مشروعك! نحن نراجع إجاباتك وسنعود إليك قريبًا. إذا حجزت مكالمة، فستجد تفاصيلها في رسالة منفصلة.',
+    sign: 'MNH XMotion',
+    dir: 'rtl',
   },
 };
 
 export function renderConfirmEmail(a: Answers, lang: string) {
   const t = CONFIRM[lang] ?? CONFIRM.en;
   const name = val(a.name).split(' ')[0];
-  const html = `<div style="background:#06060f;padding:28px;font-family:Arial,Helvetica,sans-serif;color:#f3f1fa">
-  <p style="font-size:16px">${esc(t.hi)} ${esc(name)},</p>
-  <p style="font-size:16px;line-height:1.6">${esc(t.body)}</p>
-  <p style="color:#ffb27a;font-size:16px;margin-top:24px">${esc(t.sign)}</p>
+  const greet = t.dir === 'rtl' ? `${esc(t.hi)} ${esc(name)}،` : `${esc(t.hi)} ${esc(name)},`;
+  const html = `<div dir="${t.dir}" style="background:#06060f;padding:28px;font-family:Arial,Helvetica,sans-serif;color:#f3f1fa;text-align:${t.dir === 'rtl' ? 'right' : 'left'}">
+  <p style="font-size:16px">${greet}</p>
+  <p style="font-size:16px;line-height:1.7">${esc(t.body)}</p>
+  <p style="color:#ffb27a;font-size:16px;margin-top:24px" dir="ltr">${esc(t.sign)}</p>
 </div>`;
   return { subject: t.subject, html, text: `${t.hi} ${name},\n\n${t.body}\n\n${t.sign}` };
 }
@@ -145,7 +161,7 @@ export default async (req: Request) => {
       from: env('BRIEF_FROM') || 'MNH XMotion <onboarding@resend.dev>',
       to: [env('BRIEF_TO') || 'mnhxmotion@gmail.com'],
       reply_to: String(answers.email),
-      subject: `New brief: ${val(answers.name)} · ${val(answers.service)}`,
+      subject: `New brief [${String(body.lang || 'en').toUpperCase().slice(0, 2)}]: ${val(answers.name)} · ${val(answers.service)}`,
       html: owner.html,
       text: owner.text,
     });

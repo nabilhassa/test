@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import { content } from '../data/site';
+import { getLang } from '../i18n';
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import Services from './Services.astro';
+import Portfolio from './Portfolio.astro';
+import WhyUs from './WhyUs.astro';
+import Process from './Process.astro';
+import Start from './Start.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+import Intro from './Intro.astro';
+import FilmStrip from './FilmStrip.astro';
+import BriefForm from './BriefForm.astro';
+
+const L = content[getLang(Astro.url)];
+---
+
+<Base title={L.meta.title} description={L.meta.description}>
+  <Intro />
+  <Header />
+  <main>
+    <Hero />
+    <FilmStrip words={L.strips[0]} />
+    <Services />
+    <Portfolio />
+    <WhyUs />
+    <Process />
+    <FilmStrip words={L.strips[1]} reverse tilt={2} />
+    <Start />
+    <Contact />
+  </main>
+  <Footer />
+  <BriefForm />
+</Base>

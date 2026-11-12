@@ -1,6 +1,9 @@
 ---
 import { content, contact } from '../data/site';
-const c = content.contact;
+import { getLang } from '../i18n';
+const lang = getLang(Astro.url);
+const L = content[lang];
+const c = L.contact;
 const items = [
   {
     label: c.email,

@@ -2,7 +2,10 @@
 import { Image } from 'astro:assets';
 import eye from '../assets/xmotion-eye.jpg';
 import { content } from '../data/site';
-const h = content.hero;
+import { getLang } from '../i18n';
+const lang = getLang(Astro.url);
+const L = content[lang];
+const h = L.hero;
 
 // Per-letter colors for the title (copper-light → copper → magenta), so each letter can animate on its own
 const stops = [[255, 178, 122], [255, 122, 47], [214, 59, 168]];
@@ -40,7 +43,7 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
 
   <div class="content">
     <p class="kicker reveal">{h.eyebrow}</p>
-    <h1 class="display" aria-label={`${h.title[0]} ${h.title[1]}`}>
+    <h1 class="display" dir="ltr" aria-label={`${h.title[0]} ${h.title[1]}`}>
       <span class="l1" aria-hidden="true">{[...h.title[0]].map((ch, i) => <span class="ch" style={`--ci:${i}`}>{ch}</span>)}</span>
       <span class="l2" aria-hidden="true">{letters.map((l, i) => <span class="ch" style={`--ci:${i + 3};color:${l.color}`}>{l.ch}</span>)}</span>
     </h1>
@@ -56,12 +59,12 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
         {h.secondary}
       </a>
     </div>
-    <ul class="tags reveal" style="--d:.44s" aria-label="Our toolkit">
+    <ul class="tags reveal" style="--d:.44s" aria-label={L.a11y.toolkit}>
       {h.tags.map((t) => <li class="node-tag">{t}</li>)}
     </ul>
   </div>
 
-  <a href="#services" class="scroll-cue" aria-label="Scroll down"><span></span></a>
+  <a href="#services" class="scroll-cue" aria-label={L.a11y.scrollDown}><span></span></a>
 </section>
 
 <style>
@@ -123,6 +126,7 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
     letter-spacing: .02em;
   }
   .display > span { display: block; }
+  html[dir='rtl'] .display { text-align: right; }
   .ch { display: inline-block; animation: chIn 1.3s var(--ease) both; animation-delay: calc(var(--intro-delay, 0s) + .15s + var(--ci) * 65ms); }
   @keyframes chIn {
     from { opacity: 0; transform: translateY(38%) scale(1.15); filter: blur(14px); }
@@ -152,7 +156,6 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
         linear-gradient(0deg, var(--bg) 0%, transparent 30%),
         linear-gradient(180deg, rgba(6,6,15,.7) 0%, transparent 18%);
     }
-    html[dir='rtl'] .media { inset-inline-start: 0; inset-inline-end: 34%; }
     html[dir='rtl'] .shade { scale: -1 1; }
     .l2 { font-size: clamp(56px, 9.5vw, 150px); }
   }

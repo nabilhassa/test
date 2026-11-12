@@ -1,8 +1,11 @@
 ---
-import { brief, booking } from '../data/brief';
+import { brief as briefs, booking } from '../data/brief';
+import { getLang } from '../i18n';
 import { contact } from '../data/site';
 import Monogram from './Monogram.astro';
 
+const lang = getLang(Astro.url);
+const brief = briefs[lang];
 const hasCalendar = Boolean(booking.calLink);
 const steps = brief.steps.filter((s) => !(s.when === 'no-calendar' && hasCalendar));
 const L = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -85,7 +88,7 @@ const u = brief.ui;
                   {q.fields.map((f) => (
                     <label class="field">
                       <span>{f.label}{q.required && <span class="req" aria-hidden="true">*</span>}</span>
-                      <input type={f.type} name={f.id} autocomplete={f.autocomplete} required={q.required} />
+                      <input type={f.type} name={f.id} autocomplete={f.autocomplete} required={q.required} dir={f.type === 'text' ? undefined : 'ltr'} />
                     </label>
                   ))}
                 </div>

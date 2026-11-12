@@ -1,14 +1,16 @@
 ---
 import '../styles/global.css';
+import { getLang, locales, langMeta } from '../i18n';
 
 interface Props {
   title: string;
   description: string;
-  lang?: 'en' | 'de' | 'ar';
 }
-const { title, description, lang = 'en' } = Astro.props;
-const dir = lang === 'ar' ? 'rtl' : 'ltr';
+const { title, description } = Astro.props;
+const lang = getLang(Astro.url);
+const { dir, og } = langMeta[lang];
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const alt = (l: (typeof locales)[number]) => new URL(langMeta[l].path, Astro.site).href;
 ---
 
 <!doctype html>
@@ -25,6 +27,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content={og} />
+    {locales.map((l) => <link rel="alternate" hreflang={l} href={alt(l)} />)}
+    <link rel="alternate" hreflang="x-default" href={alt('en')} />
     <script is:inline>document.documentElement.classList.remove('no-js');</script>
   </head>
   <body>

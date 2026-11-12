@@ -225,3 +225,14 @@ html[dir='rtl'] .btn:hover svg { transform: scaleX(-1) translateX(4px); }
 [data-spot]:hover::after { opacity: 1; }
 [data-tilt] { transform-style: preserve-3d; will-change: transform; }
 .btn-primary { transition: transform .4s var(--ease), box-shadow .4s var(--ease), translate .35s var(--ease); }
+
+/* ---- Phase 4: Arabic (right-to-left) ---- */
+/* Arabic letters join, so no extra letter spacing or upper-casing on Arabic text */
+html[lang='ar'] :is(.kicker, .btn, .node-tag, .no, .lbl, .label, .tabs button, .nav a, .h2, .title, h1, h2, h3, .ql, .txt, .lead, p, .hint, .t, .k) {
+  letter-spacing: 0;
+  text-transform: none;
+}
+html[lang='ar'] :is(.h2, .title, .statement, h3) { font-family: var(--font-ar); font-weight: 600; line-height: 1.35; }
+html[lang='ar'] body { line-height: 1.85; }
+/* Latin brand words keep their display font */
+html[lang='ar'] :is(.brand-name, .display, .brand) { font-family: var(--font-display); }

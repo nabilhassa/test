@@ -1,7 +1,10 @@
 ---
 import { content, portfolio } from '../data/site';
+import { getLang } from '../i18n';
 import Monogram from './Monogram.astro';
-const w = content.work;
+const lang = getLang(Astro.url);
+const L = content[lang];
+const w = L.work;
 const cats = Object.entries(w.categories) as [keyof typeof w.categories, string][];
 ---
 
@@ -12,7 +15,7 @@ const cats = Object.entries(w.categories) as [keyof typeof w.categories, string]
         <p class="kicker reveal">{w.kicker}</p>
         <h2 class="h2 reveal" data-split>{w.title}</h2>
       </div>
-      <div class="tabs reveal" style="--d:.14s" role="tablist" aria-label="Filter by category">
+      <div class="tabs reveal" style="--d:.14s" role="tablist" aria-label={L.a11y.filter}>
         <button role="tab" aria-selected="true" data-filter="all">{w.all}</button>
         {cats.map(([key, label]) => <button role="tab" aria-selected="false" data-filter={key}>{label}</button>)}
       </div>
@@ -46,7 +49,7 @@ const cats = Object.entries(w.categories) as [keyof typeof w.categories, string]
     </ul>
   </div>
 
-  <dialog class="player" data-player aria-label="Video player">
+  <dialog class="player" data-player aria-label={L.a11y.player}>
     <div class="frame">
       <button class="close" data-close aria-label={w.close}>
         <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>

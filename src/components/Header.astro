@@ -1,7 +1,10 @@
 ---
 import { content } from '../data/site';
+import { getLang, locales, langMeta } from '../i18n';
 import Monogram from './Monogram.astro';
-const n = content.nav;
+const lang = getLang(Astro.url);
+const L = content[lang];
+const n = L.nav;
 const links = [
   { href: '#services', label: n.services },
   { href: '#work', label: n.work },
@@ -13,28 +16,29 @@ const links = [
 
 <header class="site-header" data-header>
   <div class="bar">
-    <a href="#top" class="brand" aria-label="MNH XMotion, back to top">
+    <a href="#top" class="brand" aria-label={L.a11y.backToTop}>
       <Monogram class="mono" />
       <span class="brand-name">MNH <b>XMotion</b></span>
     </a>
 
-    <nav class="nav" aria-label="Main">
+    <nav class="nav" aria-label={L.a11y.main}>
       <ul>
         {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
       </ul>
     </nav>
 
     <div class="right">
-      <div class="lang" aria-label="Language">
+      <nav class="lang" aria-label={L.a11y.language} dir="ltr">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-        <a href="#" aria-disabled="true" title="German version coming in Phase 4">DE</a>
-        <span aria-hidden="true">|</span>
-        <a href="#" aria-disabled="true" title="Arabic version coming in Phase 4">AR</a>
-        <span aria-hidden="true">|</span>
-        <a href="#top" aria-current="true">EN</a>
-      </div>
+        {(['de', 'ar', 'en'] as const).map((l, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true">|</span>}
+            <a href={langMeta[l].path} hreflang={l} lang={l} title={langMeta[l].name} aria-current={l === lang ? 'true' : undefined}>{langMeta[l].label}</a>
+          </>
+        ))}
+      </nav>
       <a href="#start" class="btn btn-primary cta">{n.cta}</a>
-      <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" data-burger>
+      <button class="burger" aria-label={L.a11y.openMenu} data-label-open={L.a11y.openMenu} data-label-close={L.a11y.closeMenu} aria-expanded="false" aria-controls="mobile-menu" data-burger>
         <span></span><span></span>
       </button>
     </div>
@@ -71,7 +75,7 @@ const links = [
     gap: 24px;
   }
   .brand { display: flex; align-items: center; gap: 10px; color: var(--copper-light); }
-  .brand :global(.mono) { width: auto; height: 21px; margin: 6.5px 8px; filter: drop-shadow(0 0 8px rgba(255,122,47,.7)); }
+  .brand :global(.mono) { width: 20px; height: 20px; margin: 7px; filter: drop-shadow(0 0 8px rgba(255,122,47,.7)); }
   .brand-name { font-family: var(--font-display); font-size: 17px; letter-spacing: .1em; color: var(--text); white-space: nowrap; }
   .brand-name b { font-weight: 700; color: var(--copper-light); }
   .nav ul { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
@@ -83,7 +87,8 @@ const links = [
   .lang { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
   .lang svg { width: 16px; height: 16px; }
   .lang a[aria-current] { color: var(--copper-light); }
-  .lang a[aria-disabled] { opacity: .55; cursor: not-allowed; }
+  .lang a { transition: color .3s; }
+  .lang a:hover { color: var(--text); }
   .lang span { opacity: .35; }
   .cta { min-height: 42px; padding: 10px 20px; font-size: 13px; }
   .burger { display: none; width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: rgba(255,255,255,.04); position: relative; }
@@ -133,7 +138,7 @@ const links = [
 
   const setOpen = (open: boolean) => {
     burger.setAttribute('aria-expanded', String(open));
-    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    burger.setAttribute('aria-label', (open ? burger.dataset.labelClose : burger.dataset.labelOpen) || '');
     menu.hidden = !open;
     document.body.style.overflow = open ? 'hidden' : '';
     if (open) header.classList.add('scrolled');
@@ -142,5 +147,4 @@ const links = [
   burger.addEventListener('click', () => setOpen(burger.getAttribute('aria-expanded') !== 'true'));
   menu.querySelectorAll('[data-close]').forEach((a) => a.addEventListener('click', () => setOpen(false)));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
-  document.querySelectorAll('.lang a[aria-disabled]').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
 </script>

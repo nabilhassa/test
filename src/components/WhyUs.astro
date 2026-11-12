@@ -1,15 +1,18 @@
 ---
 import { content } from '../data/site';
+import { getLang } from '../i18n';
 import Monogram from './Monogram.astro';
-const w = content.why;
+const lang = getLang(Astro.url);
+const L = content[lang];
+const w = L.why;
 ---
 
 <section class="section why" id="why">
   <div class="wrap grid">
     <div class="visual reveal" data-mono-wrap>
-      <canvas data-mono3d aria-label="3D MNH XMotion monogram" role="img"></canvas>
+      <canvas data-mono3d aria-label={L.a11y.model} role="img"></canvas>
       <Monogram withPlanet class="fallback" />
-      <span class="hint" aria-hidden="true">Move your mouse</span>
+      <span class="hint" aria-hidden="true">{w.hint}</span>
     </div>
 
     <div class="copy">

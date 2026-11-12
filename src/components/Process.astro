@@ -1,6 +1,9 @@
 ---
 import { content } from '../data/site';
-const p = content.process;
+import { getLang } from '../i18n';
+const lang = getLang(Astro.url);
+const L = content[lang];
+const p = L.process;
 ---
 
 <section class="section space" id="process">
@@ -15,7 +18,7 @@ const p = content.process;
       {p.steps.map((s, i) => (
         <li class="step reveal" style={`--d:${0.06 * i}s`} data-spot>
           <span class="key" aria-hidden="true"></span>
-          <span class="no">Step {String(i + 1).padStart(2, '0')}</span>
+          <span class="no">{p.step} {String(i + 1).padStart(2, '0')}</span>
           <h3>{s.t}</h3>
           <p>{s.d}</p>
         </li>

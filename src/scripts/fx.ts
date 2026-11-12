@@ -18,22 +18,52 @@ if (!reduced) {
 }
 
 // ---- Split headings into words for a cinematic mask reveal ----
+const rtl = document.documentElement.dir === 'rtl';
+const isLatin = (w: string) => /[A-Za-z0-9]/.test(w) && !/[\u0600-\u06FF]/.test(w);
+const wordSpan = (text: string) => {
+  const outer = document.createElement('span');
+  outer.className = 'w';
+  const inner = document.createElement('span');
+  inner.className = 'wi';
+  inner.textContent = text;
+  outer.appendChild(inner);
+  return outer;
+};
 document.querySelectorAll<HTMLElement>('[data-split]').forEach((el) => {
   const walk = (node: Node, out: Node[]) => {
     node.childNodes.forEach((child) => {
       if (child.nodeType === Node.TEXT_NODE) {
+        // tokens: words, with trailing punctuation split off so it stays at the sentence end
+        const tokens: string[] = [];
         (child.textContent ?? '').split(/(\s+)/).forEach((part) => {
           if (!part) return;
-          if (/^\s+$/.test(part)) out.push(document.createTextNode(' '));
-          else {
-            const outer = document.createElement('span');
-            outer.className = 'w';
-            const inner = document.createElement('span');
-            inner.className = 'wi';
-            inner.textContent = part;
-            outer.appendChild(inner);
-            out.push(outer);
+          const m = part.match(/^(.*?)([.,!?؟،:;]+)$/);
+          if (m && m[1] && !/^\s+$/.test(part)) tokens.push(m[1], m[2]);
+          else tokens.push(part);
+        });
+        let run: HTMLElement | null = null; // left-to-right group in Arabic text
+        tokens.forEach((part) => {
+          if (/^\s+$/.test(part)) {
+            if (run) run.appendChild(document.createTextNode(' '));
+            else out.push(document.createTextNode(' '));
+            return;
           }
+          if (rtl && isLatin(part)) {
+            if (!run) {
+              run = document.createElement('span');
+              run.dir = 'ltr';
+              run.className = 'ltr-run';
+              out.push(run);
+            }
+            run.appendChild(wordSpan(part));
+            return;
+          }
+          if (run && run.lastChild?.nodeType === Node.TEXT_NODE) {
+            run.removeChild(run.lastChild);
+            out.push(document.createTextNode(' '));
+          }
+          run = null;
+          out.push(wordSpan(part));
         });
       } else if (child instanceof HTMLElement) {
         const clone = child.cloneNode(false) as HTMLElement;

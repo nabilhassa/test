@@ -125,7 +125,7 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
     margin: 0 0 28px;
     letter-spacing: .02em;
   }
-  .display > span { display: block; }
+  .display > span { display: block; white-space: nowrap; }
   html[dir='rtl'] .display { text-align: right; }
   .ch { display: inline-block; animation: chIn 1.3s var(--ease) both; animation-delay: calc(var(--intro-delay, 0s) + .15s + var(--ci) * 65ms); }
   @keyframes chIn {
@@ -136,7 +136,7 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
   .hero .reveal { transition-delay: calc(var(--d, 0s) + var(--intro-delay, 0s) + .5s); }
   .iris { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: screen; }
   .l1 { font-size: clamp(30px, 5vw, 64px); letter-spacing: .32em; color: rgba(243,241,250,.9); font-weight: 500; }
-  .l2 { font-size: clamp(56px, 12vw, 168px); filter: drop-shadow(0 0 30px rgba(255,122,47,.35)); padding-bottom: .06em; }
+  .l2 { font-size: min(max(56px, 12vw), 168px, calc((100vw - 48px) / 5.3)); filter: drop-shadow(0 0 30px rgba(255,122,47,.35)); padding-bottom: .06em; }
   .lead { font-size: clamp(19px, 2.1vw, 25px); font-weight: 600; max-width: 620px; margin: 0 0 10px; line-height: 1.45; }
   .sub { color: #c9c6dc; max-width: 560px; margin: 0 0 36px; }
   .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 36px; }
@@ -179,6 +179,25 @@ const letters = [...h.title[1]].map((ch, i, arr) => ({ ch, color: mix(i / Math.m
 </style>
 
 <script>
+  // Keep "MNH" and "XMotion" on one line each and fully visible, even with enlarged phone text
+  const title = document.querySelector<HTMLElement>('.hero .display');
+  if (title) {
+    const fit = () => {
+      title.querySelectorAll<HTMLElement>(':scope > span').forEach((line) => {
+        line.style.fontSize = '';
+        const avail = title.clientWidth;
+        const need = line.scrollWidth;
+        if (need > avail && avail > 0) {
+          const fs = parseFloat(getComputedStyle(line).fontSize);
+          line.style.fontSize = `${Math.floor(fs * (avail / need) * 0.98)}px`;
+        }
+      });
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    new ResizeObserver(fit).observe(title);
+  }
+
   // Running timecode in the viewfinder (HH:MM:SS:FF at 24 fps)
   const tc = document.querySelector('[data-timecode]');
   if (tc) {

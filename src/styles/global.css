@@ -181,6 +181,9 @@ html[dir='rtl'] .btn:hover svg { transform: scaleX(-1) translateX(4px); }
   backdrop-filter: blur(6px);
 }
 
+/* Particles over the whole site (src/scripts/cursorParticles.ts) – never block clicks */
+.fx-particles { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 45; pointer-events: none; }
+
 /* Scroll reveal */
 .reveal { opacity: 0; transform: translateY(36px); transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: var(--d, 0s); }
 .reveal.in { opacity: 1; transform: none; }

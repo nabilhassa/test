@@ -19,6 +19,7 @@ const L = content[getLang(Astro.url)];
 ---
 
 <Base title={L.meta.title} description={L.meta.description}>
+  <canvas class="fx-particles" data-particles aria-hidden="true"></canvas>
   <Intro />
   <Header />
   <main>

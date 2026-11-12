@@ -130,6 +130,10 @@ if (mono) {
   io.observe(mono);
 }
 
+// ---- Particles all over the site that follow the mouse / taps ----
+const particles = document.querySelector<HTMLCanvasElement>('[data-particles]');
+if (particles && !reduced) import('./cursorParticles').then(({ initCursorParticles }) => initCursorParticles(particles));
+
 // ---- Iris particles in the hero ----
 const irisCanvas = document.querySelector<HTMLCanvasElement>('[data-iris]');
 const irisImg = document.querySelector<HTMLImageElement>('[data-parallax]');

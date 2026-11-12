@@ -6,7 +6,7 @@
 //   BRIEF_FROM       sender, e.g. "MNH XMotion <brief@mnhxmotion.com>"
 //                    (default: Resend's test sender, which can only email the Resend account owner)
 //   CONFIRM_FROM     optional. When set (needs a verified domain in Resend), the client also
-//                    receives a confirmation email from this address.
+//                    receives a confirmation email from this address. Client replies go to BRIEF_TO.
 
 type Answers = Record<string, string | string[]>;
 
@@ -158,7 +158,14 @@ export default async (req: Request) => {
   if (confirmFrom) {
     const c = renderConfirmEmail(answers, String(body.lang || 'en'));
     // A failed confirmation must not fail the whole request: the brief already reached you
-    await sendEmail(key, { from: confirmFrom, to: [String(answers.email)], subject: c.subject, html: c.html, text: c.text }).catch((e) => console.error(e));
+    await sendEmail(key, {
+      from: confirmFrom,
+      to: [String(answers.email)],
+      reply_to: env('BRIEF_TO') || 'mnhxmotion@gmail.com', // replies reach your inbox even without a mailbox on the domain
+      subject: c.subject,
+      html: c.html,
+      text: c.text,
+    }).catch((e) => console.error(e));
   }
 
   return json({ ok: true });

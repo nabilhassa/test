@@ -2,6 +2,6 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://mnhxmotion.netlify.app',
+  site: 'https://mnhxmotion.com',
   vite: { build: { chunkSizeWarningLimit: 700 } },
 });

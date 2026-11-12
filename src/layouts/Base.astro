@@ -8,6 +8,7 @@ interface Props {
 }
 const { title, description, lang = 'en' } = Astro.props;
 const dir = lang === 'ar' ? 'rtl' : 'ltr';
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -19,6 +20,8 @@ const dir = lang === 'ar' ? 'rtl' : 'ltr';
     <meta name="description" content={description} />
     <meta name="theme-color" content="#06060f" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />

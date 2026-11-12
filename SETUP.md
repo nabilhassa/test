@@ -30,7 +30,7 @@ From now on, every change saved to GitHub goes live automatically.
 4. In Netlify open **Deploys → Trigger deploy → Deploy site**.
 5. Test it: open your site, fill in the brief, and check mnhxmotion@gmail.com (also look in Spam the first time).
 
-**Later, once you own a domain (e.g. mnhxmotion.com):**
+**Once you own the domain (mnhxmotion.com):**
 - In Resend open **Domains → Add domain** and add the DNS records it shows at your domain provider.
 - Then add these two variables in Netlify:
   - `BRIEF_FROM` = `MNH XMotion <brief@mnhxmotion.com>`

@@ -268,4 +268,6 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 - [x] Netlify: live at https://mnhxmotion.netlify.app
 - [x] Resend API key added in Netlify (`RESEND_API_KEY`)
 - [ ] Cal.com account + booking link (step-by-step in `SETUP.md`)
-- [ ] Later: Bunny Stream, own domain
+- [x] Own domain: https://mnhxmotion.com (old netlify.app address forwards to it)
+- [ ] Verify mnhxmotion.com in Resend → client confirmation emails
+- [ ] Later: Bunny Stream

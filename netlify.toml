@@ -9,3 +9,10 @@
   for = "/_astro/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Old Netlify address → own domain (deploy previews use other addresses and are not affected)
+[[redirects]]
+  from = "https://mnhxmotion.netlify.app/*"
+  to = "https://mnhxmotion.com/:splat"
+  status = 301
+  force = true

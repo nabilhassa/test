@@ -11,7 +11,7 @@ const isOther = (o: unknown) => typeof o === 'object' && o !== null && 'other' i
 const u = brief.ui;
 ---
 
-<dialog class="brief" data-brief data-cal={booking.calLink} aria-label={brief.welcome.title}>
+<dialog class="brief" data-brief data-lenis-prevent data-cal={booking.calLink} aria-label={brief.welcome.title}>
   <form class="shell" data-form novalidate>
     <header class="top">
       <div class="brand"><Monogram class="bm" /><span>MNH <b>XMotion</b></span></div>

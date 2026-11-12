@@ -228,7 +228,7 @@ New logo artwork: `assets/brand/xmotion-eye-keyvisual.jpg` (1792×2400)
 |------|--------|------|
 | Website framework | **Astro**: very fast, built-in multi-language support (EN/DE/AR) | Free |
 | 3D & animation | **Three.js** (3D logo), **GSAP** (scroll and title animations), **Lenis** (smooth scroll) | Free |
-| Hosting | **Netlify**: updates automatically from GitHub | Free plan |
+| Hosting | **Netlify**: updates automatically from GitHub. Live: https://mnhxmotion.netlify.app | Free plan |
 | Form & emails | **Netlify Functions + Resend**: the brief is emailed to you and the confirmation to the client | Free plan |
 | Call booking | **Cal.com** embedded in the page | Free plan |
 | Videos | **Bunny Stream**: fast streaming, no branding | ~1 €/month |
@@ -265,4 +265,7 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 - [x] Instagram: @mnhxmotion
 - [ ] Options of "How did you hear about us?" (using for now: Instagram, TikTok, YouTube, Google search, Recommendation / friend, Other)
 - [ ] Name and postal address for the Impressum
-- [ ] Accounts: Netlify, Resend, Cal.com (step-by-step in `SETUP.md`); Bunny Stream and domain later
+- [x] Netlify: live at https://mnhxmotion.netlify.app
+- [x] Resend API key added in Netlify (`RESEND_API_KEY`)
+- [ ] Cal.com account + booking link (step-by-step in `SETUP.md`)
+- [ ] Later: Bunny Stream, own domain

@@ -1,6 +1,6 @@
 // Hero "vortex": tens of thousands of GPU particle-streaks spiralling around the iris of the eye key visual.
 // Adapted from a Three.js vortex reference: spiral filaments around a hollow ring (the camera lens),
-// brightness pulses racing outward, slow auto-spin, tilt + parallax toward the cursor, bloom glow.
+// brightness pulses racing outward, slow auto-spin, bloom glow. Fitted exactly into the iris of the eye.
 // Recoloured to the MNH XMotion palette and pinned to the iris position in the hero image.
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
@@ -8,42 +8,40 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 
-const IRIS = { x: 0.505, y: 0.495, r: 0.2 }; // iris centre + radius as fractions of the eye image
+// Measured on the eye artwork (1792 × 2400 px): iris centre (908, 1197), camera-lens radius 290 px,
+// iris rim radius 505 px, eye opening (between the lids) ±345 px. All as fractions of the image width.
+const EYE = { x: 908 / 1792, y: 1197 / 2400, lens: 290 / 1792, iris: 505 / 1792, open: 345 / 1792 };
 
 const hexToVec3 = (hex: string) => {
   const n = parseInt(hex.slice(1), 16);
   return new THREE.Vector3(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
 };
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
 
 const CONFIG = {
-  coreRadius: 3.9, // hollow ring = the camera lens around the monogram
+  coreRadius: 15 * (290 / 505), // hollow ring = exactly the camera-lens edge (maxRadius = iris rim)
   maxRadius: 15,
   radialExpo: 1.75,
   swirl: 0.8,
   spread: 0.89,
-  depth: 2.8,
+  depth: 1.2,
   streamSpeed: 3.8,
   pulseFreq: 8,
   coreFall: 0.02,
   twinkleSpeed: 2.75,
   flipSpeed: 4,
-  glyphMix: 0.22,
+  glyphMix: 0.12,
   pointSize: 2.4,
-  coreBoost: 4,
-  brightness: 1.45,
+  coreBoost: 2.2,
+  brightness: 1.05,
   saturation: 0.56,
   digitSharp: 1.2,
   haloAmt: 0.8,
   haloFalloff: 1,
-  coreColor: '#ffe6cc',
-  strandColor: '#ffb27a',
-  sparkColor: '#7ff3e6',
+  coreColor: '#9ff5ec', // bright teal at the lens edge
+  strandColor: '#4fd9d0', // the iris' own teal
+  sparkColor: '#ff9a5a', // copper sparks like the iris rim
   autoSpin: 0.105,
-  tilt: 0.35,
-  parallax: 0.4,
-  outerScale: 2.0, // vortex rim = 2 × iris radius (reaches the eye's outline)
 };
 
 const VERT = /* glsl */ `
@@ -165,7 +163,8 @@ export function initVortex(canvas: HTMLCanvasElement, img: HTMLImageElement, opt
   renderer.setClearColor(0x000000, 1); // black + CSS "screen" blending = only the light shows
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(52, 1, 0.1, 240);
+  // Orthographic camera in screen pixels: the vortex is drawn flat onto the eye, so it can never drift off it
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 100);
   camera.position.set(0, 0, 17);
 
   const [filaments, perFilament] = opts.mobile ? [140, 160] : [280, 320];
@@ -213,53 +212,66 @@ export function initVortex(canvas: HTMLCanvasElement, img: HTMLImageElement, opt
 
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), opts.mobile ? 0.3 : 0.35, 0.6, 0);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(1, 1), opts.mobile ? 0.18 : 0.22, 0.25, 0.05);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
 
-  // Pin the vortex to where the iris is actually drawn (the image uses object-fit: cover)
-  const anchor = new THREE.Vector3();
-  const layout = () => {
+  // Pin the vortex to where the iris is actually drawn (object-fit: cover + the eye's slow zoom + parallax).
+  // Recomputed every frame so it follows the image exactly.
+  let W = 0;
+  let H = 0;
+  let objPos: [number, number] = [0.5, 0.5];
+  const resize = () => {
     const rect = canvas.getBoundingClientRect();
-    const W = rect.width;
-    const H = rect.height;
+    W = rect.width;
+    H = rect.height;
     if (!W || !H) return;
     renderer.setSize(W, H, false);
     composer.setPixelRatio(dpr);
     composer.setSize(W, H);
-    camera.aspect = W / H;
+    camera.left = -W / 2;
+    camera.right = W / 2;
+    camera.top = H / 2;
+    camera.bottom = -H / 2;
     camera.updateProjectionMatrix();
     mat.uniforms.uRes.value.set(W * dpr, H * dpr);
+    const [px, py] = getComputedStyle(img).objectPosition.split(' ').map((v) => parseFloat(v) / 100);
+    objPos = [isNaN(px) ? 0.5 : px, isNaN(py) ? 0.5 : py];
+  };
+  resize();
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas);
+  img.addEventListener('load', resize);
 
+  let lastMask = '';
+  const align = () => {
+    const rect = canvas.getBoundingClientRect();
     const ir = img.getBoundingClientRect();
     const iw = img.naturalWidth || 1792;
     const ih = img.naturalHeight || 2400;
-    const scale = Math.max(ir.width / iw, ir.height / ih);
-    const rw = iw * scale;
-    const rh = ih * scale;
-    const [px, py] = getComputedStyle(img).objectPosition.split(' ').map((v) => parseFloat(v) / 100);
-    const cx = ir.left - rect.left + (ir.width - rw) * (isNaN(px) ? 0.5 : px) + rw * IRIS.x;
-    const cy = ir.top - rect.top + (ir.height - rh) * (isNaN(py) ? 0.5 : py) + rh * IRIS.y;
-    const worldPerPx = (2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) / H;
-    anchor.set((cx - W / 2) * worldPerPx, -(cy - H / 2) * worldPerPx, 0);
-    group.position.copy(anchor);
-    group.scale.setScalar((rw * IRIS.r * CONFIG.outerScale * worldPerPx) / CONFIG.maxRadius);
+    const sc = Math.max(ir.width / iw, ir.height / ih);
+    const rw = iw * sc;
+    const rh = ih * sc;
+    const cx = ir.left - rect.left + (ir.width - rw) * objPos[0] + rw * EYE.x;
+    const cy = ir.top - rect.top + (ir.height - rh) * objPos[1] + rh * EYE.y;
+    group.position.set(cx - W / 2, H / 2 - cy, 0);
+    group.scale.setScalar((rw * EYE.iris) / CONFIG.maxRadius);
+    // clip to the eye opening (soft edge at the iris rim and the eyelids)
+    const rx = rw * EYE.iris;
+    const ry = rw * EYE.open;
+    const lens = rw * EYE.lens;
+    const at = `at ${cx.toFixed(1)}px ${cy.toFixed(1)}px`;
+    // layer 1: eye opening (iris rim + lids); layer 2: hole over the camera lens so the monogram stays clean
+    const m = `radial-gradient(${rx.toFixed(1)}px ${ry.toFixed(1)}px ${at}, #000 82%, transparent 100%), radial-gradient(circle ${(lens * 1.04).toFixed(1)}px ${at}, transparent 92%, #000 100%)`;
+    if (m !== lastMask) {
+      const st = canvas.style as CSSStyleDeclaration & { webkitMaskComposite?: string };
+      st.maskImage = m;
+      st.webkitMaskImage = m;
+      st.maskComposite = 'intersect';
+      st.webkitMaskComposite = 'source-in';
+      lastMask = m;
+    }
   };
-  layout();
-  const ro = new ResizeObserver(layout);
-  ro.observe(canvas);
-  img.addEventListener('load', layout);
-
-  const target = { x: 0, y: 0 };
-  const mouse = { x: 0, y: 0 };
-  window.addEventListener(
-    'pointermove',
-    (e) => {
-      target.x = (e.clientX / window.innerWidth) * 2 - 1;
-      target.y = -((e.clientY / window.innerHeight) * 2 - 1);
-    },
-    { passive: true },
-  );
 
   const appearStart = performance.now() + opts.startDelay;
   let prevT = performance.now() / 1000;
@@ -270,23 +282,14 @@ export function initVortex(canvas: HTMLCanvasElement, img: HTMLImageElement, opt
     const t = performance.now() / 1000;
     const dt = Math.min(0.05, t - prevT);
     prevT = t;
-    mouse.x = lerp(mouse.x, target.x, 0.06);
-    mouse.y = lerp(mouse.y, target.y, 0.06);
     mat.uniforms.iTime.value = t;
     mat.uniforms.uAlpha.value = clamp((performance.now() - appearStart - 300) / 1800, 0, 1);
     spin += dt * CONFIG.autoSpin;
     group.rotation.z = spin;
-    group.rotation.x = lerp(group.rotation.x, -mouse.y * CONFIG.tilt, 0.05);
-    group.rotation.y = lerp(group.rotation.y, mouse.x * CONFIG.tilt, 0.05);
-    // gentle parallax dolly, always looking at the iris so the vortex stays pinned to the eye
-    camera.position.x = lerp(camera.position.x, anchor.x + mouse.x * CONFIG.parallax, 0.05);
-    camera.position.y = lerp(camera.position.y, anchor.y + mouse.y * CONFIG.parallax, 0.05);
-    camera.lookAt(anchor);
+    align();
     composer.render();
     if (visible) raf = requestAnimationFrame(frame);
   };
-  // camera starts centred on the iris
-  camera.position.set(anchor.x, anchor.y, 17);
 
   const io = new IntersectionObserver(([e]) => {
     visible = e.isIntersecting && !document.hidden;

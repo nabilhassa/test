@@ -134,7 +134,7 @@ const en = {
   ] as Step[],
   booking: {
     title: 'Pick a time for your free strategy call',
-    text: 'Choose a slot that suits you. The video-call link is sent to you automatically.',
+    text: 'Choose a slot that suits you, then choose a video call or a phone call. We recommend a video call, so we can look at visuals together. The call link is sent to you automatically.',
     skip: 'Book later',
     booked: '✓ Call booked for {time}. Now just a few details about you.',
     bookedNoTime: '✓ Call booked. Now just a few details about you.',
@@ -272,7 +272,7 @@ const de: Brief = {
   ] as Step[],
   booking: {
     title: 'Wähle einen Termin für deinen kostenlosen Strategie-Call',
-    text: 'Such dir einen passenden Termin aus. Den Link zum Videogespräch bekommst du automatisch.',
+    text: 'Such dir einen passenden Termin aus und wähle Videogespräch oder Telefonat. Wir empfehlen ein Videogespräch, damit wir Visuals gemeinsam ansehen können. Den Link bekommst du automatisch.',
     skip: 'Später buchen',
     booked: '✓ Termin gebucht: {time}. Jetzt nur noch ein paar Angaben zu dir.',
     bookedNoTime: '✓ Termin gebucht. Jetzt nur noch ein paar Angaben zu dir.',
@@ -408,7 +408,7 @@ const ar: Brief = {
   ] as Step[],
   booking: {
     title: 'اختر موعد مكالمتك الاستراتيجية المجانية',
-    text: 'اختر الموعد المناسب لك، وسيصلك رابط مكالمة الفيديو تلقائيًا.',
+    text: 'اختر الموعد المناسب لك، ثم اختر مكالمة فيديو أو مكالمة هاتفية. ننصح بمكالمة الفيديو لنتمكّن من مراجعة المرئيات معًا. سيصلك رابط المكالمة تلقائيًا.',
     skip: 'الحجز لاحقًا',
     booked: '✓ تم حجز المكالمة: {time}. بقي القليل من المعلومات عنك.',
     bookedNoTime: '✓ تم حجز المكالمة. بقي القليل من المعلومات عنك.',

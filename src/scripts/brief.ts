@@ -8,7 +8,13 @@ if (dlg) init(dlg);
 
 function init(dlg: HTMLDialogElement) {
   const form = dlg.querySelector<HTMLFormElement>('[data-form]')!;
-  const { ui, email: ownerEmail } = JSON.parse(dlg.querySelector('[data-brief-ui]')!.textContent || '{}') as { ui: UI; email: string };
+  const { ui, email: ownerEmail, booking: bt } = JSON.parse(dlg.querySelector('[data-brief-ui]')!.textContent || '{}') as {
+    ui: UI;
+    email: string;
+    booking: Record<string, string>;
+  };
+  // result of the Cal.com step (comes before the personal information)
+  const booking = { loaded: false, booked: false, skipped: false, start: '', video: '' };
   const calLink = dlg.dataset.cal || '';
   const panels = [...dlg.querySelectorAll<HTMLElement>('[data-panel="welcome"], [data-panel="step"]')];
   const steps = panels.filter((p) => p.dataset.panel === 'step');
@@ -70,6 +76,7 @@ function init(dlg: HTMLDialogElement) {
     errorBox.hidden = true;
     scroller.scrollTop = 0;
     const panel = panels[i];
+    if (panel.dataset.step === 'booking' && calLink && !booking.loaded) loadCal(calLink, collect());
     const first = panel.querySelector<HTMLElement>('input:not([type=hidden]):not([hidden]), textarea, select, button');
     if (first && i > 0)
       setTimeout(() => {
@@ -79,11 +86,20 @@ function init(dlg: HTMLDialogElement) {
   };
 
   const next = async () => {
-    if (idx > 0 && !validate(panels[idx])) return;
+    const cur = panels[idx];
+    if (cur.dataset.step === 'booking' && !booking.booked && !booking.skipped) {
+      cur.querySelector<HTMLElement>('[data-booking-err]')!.textContent = bt.need;
+      return;
+    }
+    if (idx > 0 && !validate(cur)) return;
     if (idx === panels.length - 1) return submit();
     show(idx + 1);
   };
   dlg.querySelectorAll('[data-next]').forEach((b) => b.addEventListener('click', next));
+  dlg.querySelector('[data-skip]')?.addEventListener('click', () => {
+    booking.skipped = true;
+    next();
+  });
   backBtn.addEventListener('click', () => idx > 0 && show(idx - 1));
   form.addEventListener('submit', (e) => e.preventDefault());
   form.addEventListener('keydown', (e) => {
@@ -196,6 +212,10 @@ function init(dlg: HTMLDialogElement) {
 
   async function submit() {
     const answers = collect();
+    if (booking.booked) {
+      answers.callTime = booking.start || 'booked';
+      if (booking.video) answers.videoLink = booking.video;
+    } else if (calLink) answers.callTime = 'Not booked yet (chose “Book later”)';
     nextBtn.setAttribute('aria-busy', 'true');
     nextLabel.textContent = ui.sending;
     errorBox.hidden = true;
@@ -228,30 +248,52 @@ function init(dlg: HTMLDialogElement) {
   }
   dlg.querySelector('[data-retry]')!.addEventListener('click', submit);
 
-  function done(a: Answers) {
+  function done(_a: Answers) {
     panels.forEach((p) => (p.hidden = true));
     nav.hidden = true;
     progress.hidden = true;
     errorBox.hidden = true;
     scroller.scrollTop = 0;
-    if (calLink) {
-      dlg.querySelector<HTMLElement>('[data-panel="booking"]')!.hidden = false;
-      loadCal(calLink, a);
-    } else {
-      dlg.querySelector<HTMLElement>('[data-panel="done"]')!.hidden = false;
-    }
-  }
-
-  function showDoneAfterBooking() {
-    dlg.querySelector<HTMLElement>('[data-panel="booking"]')!.hidden = true;
     const d = dlg.querySelector<HTMLElement>('[data-panel="done"]')!;
     const t = d.querySelector<HTMLElement>('[data-done-text]')!;
-    t.textContent = t.dataset.calText || t.textContent;
+    if (booking.booked && t.dataset.calText) t.textContent = t.dataset.calText;
     d.hidden = false;
+  }
+
+  // Called by Cal.com after a successful booking: remember the time + video link,
+  // take over name and email for the next step, then move on.
+  function onBooked(e: unknown) {
+    const d = ((e as { detail?: { data?: Record<string, any> } })?.detail?.data ?? {}) as Record<string, any>;
+    const b = (d.booking ?? d) as Record<string, any>;
+    booking.booked = true;
+    booking.start = String(b.startTime ?? d.startTime ?? d.date ?? '');
+    booking.video = String(b.videoCallUrl ?? d.videoCallUrl ?? b.metadata?.videoCallUrl ?? b.location ?? '').startsWith('http')
+      ? String(b.videoCallUrl ?? d.videoCallUrl ?? b.metadata?.videoCallUrl ?? b.location)
+      : '';
+    const att = (b.attendees?.[0] ?? d.attendees?.[0] ?? b.responses ?? {}) as Record<string, any>;
+    const setIfEmpty = (name: string, v: unknown) => {
+      const inp = form.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+      if (inp && !inp.value && typeof v === 'string' && v) inp.value = v;
+    };
+    setIfEmpty('name', att.name);
+    setIfEmpty('email', att.email);
+    let when = '';
+    if (booking.start) {
+      const dt = new Date(booking.start);
+      if (!isNaN(+dt)) when = dt.toLocaleString(document.documentElement.lang, { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    }
+    const panel = dlg.querySelector<HTMLElement>('[data-step="booking"]')!;
+    const msg = panel.querySelector<HTMLElement>('[data-booked]')!;
+    msg.textContent = when ? bt.booked.replace('{time}', when) : bt.bookedNoTime;
+    msg.hidden = false;
+    panel.querySelector<HTMLElement>('[data-booking-err]')!.textContent = '';
+    (panel.querySelector('[data-skip]') as HTMLElement).hidden = true;
+    setTimeout(() => panels[idx] === panel && next(), 1800);
   }
 
   // Cal.com inline embed, pre-filled with the client's name, email and a short brief summary
   function loadCal(link: string, a: Answers) {
+    booking.loaded = true;
     type CalFn = ((...args: unknown[]) => void) & { ns: Record<string, (...args: unknown[]) => void>; q?: unknown[]; loaded?: boolean };
     const w = window as unknown as { Cal?: CalFn };
     if (!w.Cal) {
@@ -274,22 +316,32 @@ function init(dlg: HTMLDialogElement) {
     }
     const Cal = w.Cal!;
     Cal('init', 'brief', { origin: 'https://cal.com' });
-    const notes = `Service: ${a.service ?? ''}\nBudget: ${a.budget ?? ''}\nTimeline: ${a.timeline ?? ''}\nBrand: ${a.brand ?? ''} (${a.profile ?? ''})`;
+    const notes = `Service: ${a.service ?? ''}\nBudget: ${a.budget ?? ''}\nTimeline: ${a.timeline ?? ''}`;
     Cal.ns.brief('inline', {
       elementOrSelector: '#cal-inline',
       calLink: link,
       layout: 'month_view',
-      config: { name: a.name, email: a.email, notes, theme: 'dark', layout: 'month_view' },
+      config: { notes, theme: 'dark', layout: 'month_view' },
     });
     Cal.ns.brief('ui', { theme: 'dark', hideEventTypeDetails: false, layout: 'month_view', styles: { branding: { brandColor: '#ff7a2f' } } });
-    Cal.ns.brief('on', { action: 'bookingSuccessful', callback: showDoneAfterBooking });
+    Cal.ns.brief('on', { action: 'bookingSuccessfulV2', callback: onBooked });
+    Cal.ns.brief('on', { action: 'bookingSuccessful', callback: (e: unknown) => !booking.booked && onBooked(e) });
   }
 
   function reset() {
     form.reset();
     form.querySelectorAll<HTMLInputElement>('input.other').forEach((i) => (i.hidden = true));
     form.querySelectorAll<HTMLElement>('[data-q]').forEach(clearErr);
-    dlg.querySelectorAll<HTMLElement>('[data-panel="booking"], [data-panel="done"]').forEach((p) => (p.hidden = true));
+    dlg.querySelectorAll<HTMLElement>('[data-panel="done"]').forEach((p) => (p.hidden = true));
+    // a fresh calendar for the next brief
+    Object.assign(booking, { loaded: false, booked: false, skipped: false, start: '', video: '' });
+    const cal = dlg.querySelector<HTMLElement>('[data-cal-inline]');
+    if (cal) cal.innerHTML = '';
+    const bp = dlg.querySelector<HTMLElement>('[data-step="booking"]');
+    if (bp) {
+      (bp.querySelector('[data-booked]') as HTMLElement).hidden = true;
+      (bp.querySelector('[data-skip]') as HTMLElement).hidden = false;
+    }
     sent = false;
     openedAt = 0;
     show(0);

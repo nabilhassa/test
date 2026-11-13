@@ -8,6 +8,9 @@ const lang = getLang(Astro.url);
 const brief = briefs[lang];
 const hasCalendar = Boolean(booking.calLink);
 const steps = brief.steps.filter((s) => !(s.when === 'no-calendar' && hasCalendar));
+// with a calendar, the booking step comes right before the personal information
+const total = steps.length + (hasCalendar ? 1 : 0);
+const stepNo = (si: number, id: string) => si + 1 + (hasCalendar && steps.findIndex((x) => x.id === 'contact') <= si ? 1 : 0);
 const L = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const label = (o: string | { label: string }) => (typeof o === 'string' ? o : o.label);
 const isOther = (o: unknown) => typeof o === 'object' && o !== null && 'other' in o;
@@ -19,8 +22,8 @@ const u = brief.ui;
     <header class="top">
       <div class="brand"><Monogram class="bm" /><span>MNH <b>XMotion</b></span></div>
       <div class="progress" data-progress hidden>
-        <span class="label"><span data-step-label>{u.step} 1 {u.of} {steps.length}</span></span>
-        <div class="bars">{steps.map(() => <i></i>)}</div>
+        <span class="label"><span data-step-label>{u.step} 1 {u.of} {total}</span></span>
+        <div class="bars">{Array.from({ length: total }, () => <i></i>)}</div>
       </div>
       <button type="button" class="close" data-close aria-label={u.close}>
         <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
@@ -46,8 +49,20 @@ const u = brief.ui;
       </section>
 
       {steps.map((s, si) => (
+        <>
+        {hasCalendar && s.id === 'contact' && (
+          <section class="panel step booking" data-panel="step" data-step="booking" hidden>
+            <p class="kicker">{u.step} {si + 1} {u.of} {total}</p>
+            <h2 class="title">{brief.booking.title}</h2>
+            <p class="lead">{brief.booking.text}</p>
+            <div class="cal" id="cal-inline" data-cal-inline></div>
+            <p class="booked" data-booked hidden></p>
+            <p class="err" role="alert" data-booking-err></p>
+            <button type="button" class="skip" data-skip>{brief.booking.skip} →</button>
+          </section>
+        )}
         <section class="panel step" data-panel="step" data-step={s.id} hidden>
-          <p class="kicker">{u.step} {si + 1} {u.of} {steps.length}</p>
+          <p class="kicker">{u.step} {stepNo(si, s.id)} {u.of} {total}</p>
           <h2 class="title">{s.title}</h2>
           {s.questions.map((q) => (
             <fieldset class="q" data-q={q.id} data-type={q.type} data-required={q.required ? '' : undefined} data-max={'max' in q ? q.max : undefined}>
@@ -106,15 +121,8 @@ const u = brief.ui;
             </fieldset>
           ))}
         </section>
+        </>
       ))}
-
-      <!-- Booking (Cal.com), shown after sending when a calendar is configured -->
-      <section class="panel booking" data-panel="booking" hidden>
-        <p class="kicker">✓ {brief.done.title}</p>
-        <h2 class="title">{brief.booking.title}</h2>
-        <p class="lead">{brief.booking.text}</p>
-        <div class="cal" id="cal-inline" data-cal-inline></div>
-      </section>
 
       <!-- Done -->
       <section class="panel done" data-panel="done" hidden>
@@ -147,7 +155,7 @@ const u = brief.ui;
       </button>
     </footer>
   </form>
-  <script type="application/json" data-brief-ui set:html={JSON.stringify({ ui: u, email: contact.email })} />
+  <script type="application/json" data-brief-ui set:html={JSON.stringify({ ui: u, email: contact.email, booking: brief.booking })} />
 </dialog>
 
 <script>
@@ -255,6 +263,10 @@ const u = brief.ui;
   html[dir='rtl'] .back svg, html[dir='rtl'] [data-next] svg { transform: scaleX(-1); }
   [data-next][aria-busy='true'] { opacity: .7; pointer-events: none; }
 
+  .booked { margin: 16px 0 0; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(34,211,197,.5); background: rgba(34,211,197,.08); color: #bff6f1; font-weight: 600; }
+  .booked[hidden] { display: none; }
+  .skip { margin-top: 18px; background: none; border: 0; padding: 8px 0; color: var(--muted); font-size: 15px; text-decoration: underline; text-underline-offset: 4px; }
+  .skip:hover { color: var(--text); }
   .cal { min-height: 560px; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); background: rgba(255,255,255,.02); }
   .done { text-align: center; padding-top: clamp(60px, 14vh, 140px); }
   .seal { width: 110px; height: 110px; margin: 0 auto 28px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, rgba(255,122,47,.22), transparent 70%); box-shadow: 0 0 0 1px var(--line-strong), 0 0 60px -10px rgba(255,122,47,.6); animation: pop .9s var(--ease); }

@@ -133,8 +133,12 @@ const en = {
     },
   ] as Step[],
   booking: {
-    title: 'Book your strategy call',
-    text: 'Your brief is in. Pick a time that suits you; the call link is sent to you automatically.',
+    title: 'Pick a time for your free strategy call',
+    text: 'Choose a slot that suits you. The video-call link is sent to you automatically.',
+    skip: 'Book later',
+    booked: '✓ Call booked for {time}. Now just a few details about you.',
+    bookedNoTime: '✓ Call booked. Now just a few details about you.',
+    need: 'Please pick a time, or choose “Book later”.',
   },
   done: {
     title: 'Thank you, your brief is in!',
@@ -267,8 +271,12 @@ const de: Brief = {
     },
   ] as Step[],
   booking: {
-    title: 'Buche deinen Strategie-Call',
-    text: 'Dein Briefing ist angekommen. Wähle einen passenden Termin – den Link zum Gespräch bekommst du automatisch.',
+    title: 'Wähle einen Termin für deinen kostenlosen Strategie-Call',
+    text: 'Such dir einen passenden Termin aus. Den Link zum Videogespräch bekommst du automatisch.',
+    skip: 'Später buchen',
+    booked: '✓ Termin gebucht: {time}. Jetzt nur noch ein paar Angaben zu dir.',
+    bookedNoTime: '✓ Termin gebucht. Jetzt nur noch ein paar Angaben zu dir.',
+    need: 'Bitte wähle einen Termin – oder „Später buchen“.',
   },
   done: {
     title: 'Danke, dein Briefing ist angekommen!',
@@ -399,8 +407,12 @@ const ar: Brief = {
     },
   ] as Step[],
   booking: {
-    title: 'احجز مكالمة الاستراتيجية',
-    text: 'وصلنا ملخّص مشروعك. اختر الوقت الذي يناسبك، وسيصلك رابط المكالمة تلقائيًا.',
+    title: 'اختر موعد مكالمتك الاستراتيجية المجانية',
+    text: 'اختر الموعد المناسب لك، وسيصلك رابط مكالمة الفيديو تلقائيًا.',
+    skip: 'الحجز لاحقًا',
+    booked: '✓ تم حجز المكالمة: {time}. بقي القليل من المعلومات عنك.',
+    bookedNoTime: '✓ تم حجز المكالمة. بقي القليل من المعلومات عنك.',
+    need: 'يرجى اختيار موعد، أو اختيار «الحجز لاحقًا».',
   },
   done: {
     title: 'شكرًا لك، وصلنا ملخّص مشروعك!',

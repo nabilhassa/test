@@ -27,6 +27,8 @@ const LABELS: Record<string, string> = {
   callType: 'Call type',
   days: 'Preferred days',
   timeWindow: 'Preferred time',
+  callTime: 'Call booked for',
+  videoLink: 'Video call link',
   name: 'Name',
   email: 'Email',
   phone: 'Phone',

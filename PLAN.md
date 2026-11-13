@@ -272,3 +272,32 @@ Each phase ends with screenshots / a preview for your feedback before moving on.
 - [x] Own domain: https://mnhxmotion.com (old netlify.app address forwards to it)
 - [ ] Verify mnhxmotion.com in Resend → client confirmation emails
 - [ ] Later: Bunny Stream
+
+---
+
+## 📌 Status & next steps (13 Nov 2026)
+
+**Live:** https://mnhxmotion.com (Netlify deploys from branch `claude/website-creation-help-n3g79p`).
+
+**Done:** Phases 1–4 and Phase 5 effects so far (vortex inside the iris, particles orbiting the eye, 3D depth particles
+behind content + mouse/tap swarm in front, star flare behind the 3D planet). Cal.com `mnh-xmotion/30min` is embedded
+after the brief; the Cal Video link works and bookings appear in Notion Calendar.
+
+**Decisions:**
+- All work accounts use **mnhxmotion@gmail.com** (Cal.com, Resend, new **work Notion**). The private Notion
+  (napul27@gmail.com) must not be changed.
+- Notion Calendar (work) shows client bookings (Google Calendar of mnhxmotion@gmail.com) and the planning databases.
+- Anything that must block client calls (shifts, appointments) has to be a real calendar event, not only a database row.
+
+**Next, once Claude's Notion connector points at the work workspace:**
+1. Create a **Clients** database (Name, Email, Service, Budget, Timeline, Status: New brief → Call booked → Proposal →
+   Won/Lost, Call date, Video link, full brief) and a **Planning** database (date + time, "Block calls" checkbox),
+   then add both to Notion Calendar.
+2. Website → Notion: the brief function creates a Clients page (needs a Notion integration token in Netlify).
+3. Cal.com webhook → updates the Clients page (Call booked, date, video link).
+4. Optional AI follow-up email with free Cal.com slots (needs ANTHROPIC_API_KEY + CALCOM_API_KEY in Netlify and the
+   Resend domain verified). Test week first: emails only to the owner.
+
+**Still open (owner):** Resend domain records, Google Drive videos → "Anyone with the link", Impressum details,
+du/Sie decision, socials, video titles.
+**Phase 6:** Impressum + Datenschutz (EN/DE/AR), privacy-friendly analytics, SEO, speed and accessibility check.

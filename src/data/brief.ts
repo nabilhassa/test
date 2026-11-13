@@ -136,8 +136,8 @@ const en = {
     title: 'Pick a time for your free strategy call',
     text: 'Choose a slot that suits you, then choose a video call or a phone call. We recommend a video call, so we can look at visuals together. The call link is sent to you automatically.',
     skip: 'Book later',
-    booked: '✓ Call booked for {time}. Now just a few details about you.',
-    bookedNoTime: '✓ Call booked. Now just a few details about you.',
+    booked: '✓ Call booked for {time}. Sending your brief…',
+    bookedNoTime: '✓ Call booked. Sending your brief…',
     need: 'Please pick a time, or choose “Book later”.',
   },
   done: {
@@ -274,8 +274,8 @@ const de: Brief = {
     title: 'Wähle einen Termin für deinen kostenlosen Strategie-Call',
     text: 'Such dir einen passenden Termin aus und wähle Videogespräch oder Telefonat. Wir empfehlen ein Videogespräch, damit wir Visuals gemeinsam ansehen können. Den Link bekommst du automatisch.',
     skip: 'Später buchen',
-    booked: '✓ Termin gebucht: {time}. Jetzt nur noch ein paar Angaben zu dir.',
-    bookedNoTime: '✓ Termin gebucht. Jetzt nur noch ein paar Angaben zu dir.',
+    booked: '✓ Termin gebucht: {time}. Dein Briefing wird gesendet…',
+    bookedNoTime: '✓ Termin gebucht. Dein Briefing wird gesendet…',
     need: 'Bitte wähle einen Termin – oder „Später buchen“.',
   },
   done: {
@@ -410,8 +410,8 @@ const ar: Brief = {
     title: 'اختر موعد مكالمتك الاستراتيجية المجانية',
     text: 'اختر الموعد المناسب لك، ثم اختر مكالمة فيديو أو مكالمة هاتفية. ننصح بمكالمة الفيديو لنتمكّن من مراجعة المرئيات معًا. سيصلك رابط المكالمة تلقائيًا.',
     skip: 'الحجز لاحقًا',
-    booked: '✓ تم حجز المكالمة: {time}. بقي القليل من المعلومات عنك.',
-    bookedNoTime: '✓ تم حجز المكالمة. بقي القليل من المعلومات عنك.',
+    booked: '✓ تم حجز المكالمة: {time}. جارٍ إرسال الملخّص…',
+    bookedNoTime: '✓ تم حجز المكالمة. جارٍ إرسال الملخّص…',
     need: 'يرجى اختيار موعد، أو اختيار «الحجز لاحقًا».',
   },
   done: {

@@ -14,7 +14,7 @@ function init(dlg: HTMLDialogElement) {
     booking: Record<string, string>;
   };
   // result of the Cal.com step (comes before the personal information)
-  const booking = { loaded: false, booked: false, skipped: false, start: '', video: '' };
+  const booking = { loaded: false, booked: false, skipped: false, start: '', video: '', key: '' };
   const calLink = dlg.dataset.cal || '';
   const panels = [...dlg.querySelectorAll<HTMLElement>('[data-panel="welcome"], [data-panel="step"]')];
   const steps = panels.filter((p) => p.dataset.panel === 'step');
@@ -76,7 +76,17 @@ function init(dlg: HTMLDialogElement) {
     errorBox.hidden = true;
     scroller.scrollTop = 0;
     const panel = panels[i];
-    if (panel.dataset.step === 'booking' && calLink && !booking.loaded) loadCal(calLink, collect());
+    if (panel.dataset.step === 'booking' && calLink && !booking.booked) {
+      const a = collect();
+      const key = `${a.name}|${a.email}`;
+      // (re)load the calendar pre-filled with the name + email from the previous step
+      if (!booking.loaded || booking.key !== key) {
+        const cal = dlg.querySelector<HTMLElement>('[data-cal-inline]');
+        if (cal) cal.innerHTML = '';
+        booking.key = key;
+        loadCal(calLink, a);
+      }
+    }
     const first = panel.querySelector<HTMLElement>('input:not([type=hidden]):not([hidden]), textarea, select, button');
     if (first && i > 0)
       setTimeout(() => {
@@ -270,13 +280,6 @@ function init(dlg: HTMLDialogElement) {
     booking.video = String(b.videoCallUrl ?? d.videoCallUrl ?? b.metadata?.videoCallUrl ?? b.location ?? '').startsWith('http')
       ? String(b.videoCallUrl ?? d.videoCallUrl ?? b.metadata?.videoCallUrl ?? b.location)
       : '';
-    const att = (b.attendees?.[0] ?? d.attendees?.[0] ?? b.responses ?? {}) as Record<string, any>;
-    const setIfEmpty = (name: string, v: unknown) => {
-      const inp = form.querySelector<HTMLInputElement>(`input[name="${name}"]`);
-      if (inp && !inp.value && typeof v === 'string' && v) inp.value = v;
-    };
-    setIfEmpty('name', att.name);
-    setIfEmpty('email', att.email);
     let when = '';
     if (booking.start) {
       const dt = new Date(booking.start);
@@ -288,7 +291,7 @@ function init(dlg: HTMLDialogElement) {
     msg.hidden = false;
     panel.querySelector<HTMLElement>('[data-booking-err]')!.textContent = '';
     (panel.querySelector('[data-skip]') as HTMLElement).hidden = true;
-    setTimeout(() => panels[idx] === panel && next(), 1800);
+    setTimeout(() => panels[idx] === panel && next(), 1500); // last step → sends the brief
   }
 
   // Cal.com inline embed, pre-filled with the client's name, email and a short brief summary
@@ -321,7 +324,7 @@ function init(dlg: HTMLDialogElement) {
       elementOrSelector: '#cal-inline',
       calLink: link,
       layout: 'month_view',
-      config: { notes, theme: 'dark', layout: 'month_view' },
+      config: { name: String(a.name || ''), email: String(a.email || ''), notes, theme: 'dark', layout: 'month_view' },
     });
     Cal.ns.brief('ui', { theme: 'dark', hideEventTypeDetails: false, layout: 'month_view', styles: { branding: { brandColor: '#ff7a2f' } } });
     Cal.ns.brief('on', { action: 'bookingSuccessfulV2', callback: onBooked });
@@ -334,7 +337,7 @@ function init(dlg: HTMLDialogElement) {
     form.querySelectorAll<HTMLElement>('[data-q]').forEach(clearErr);
     dlg.querySelectorAll<HTMLElement>('[data-panel="done"]').forEach((p) => (p.hidden = true));
     // a fresh calendar for the next brief
-    Object.assign(booking, { loaded: false, booked: false, skipped: false, start: '', video: '' });
+    Object.assign(booking, { loaded: false, booked: false, skipped: false, start: '', video: '', key: '' });
     const cal = dlg.querySelector<HTMLElement>('[data-cal-inline]');
     if (cal) cal.innerHTML = '';
     const bp = dlg.querySelector<HTMLElement>('[data-step="booking"]');

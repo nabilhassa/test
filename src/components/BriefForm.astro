@@ -8,9 +8,9 @@ const lang = getLang(Astro.url);
 const brief = briefs[lang];
 const hasCalendar = Boolean(booking.calLink);
 const steps = brief.steps.filter((s) => !(s.when === 'no-calendar' && hasCalendar));
-// with a calendar, the booking step comes right before the personal information
+// with a calendar, booking is the last step (after the personal information, so name + email are pre-filled)
 const total = steps.length + (hasCalendar ? 1 : 0);
-const stepNo = (si: number, id: string) => si + 1 + (hasCalendar && steps.findIndex((x) => x.id === 'contact') <= si ? 1 : 0);
+const stepNo = (si: number, _id: string) => si + 1;
 const L = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const label = (o: string | { label: string }) => (typeof o === 'string' ? o : o.label);
 const isOther = (o: unknown) => typeof o === 'object' && o !== null && 'other' in o;
@@ -50,17 +50,6 @@ const u = brief.ui;
 
       {steps.map((s, si) => (
         <>
-        {hasCalendar && s.id === 'contact' && (
-          <section class="panel step booking" data-panel="step" data-step="booking" hidden>
-            <p class="kicker">{u.step} {si + 1} {u.of} {total}</p>
-            <h2 class="title">{brief.booking.title}</h2>
-            <p class="lead">{brief.booking.text}</p>
-            <div class="cal" id="cal-inline" data-cal-inline></div>
-            <p class="booked" data-booked hidden></p>
-            <p class="err" role="alert" data-booking-err></p>
-            <button type="button" class="skip" data-skip>{brief.booking.skip} →</button>
-          </section>
-        )}
         <section class="panel step" data-panel="step" data-step={s.id} hidden>
           <p class="kicker">{u.step} {stepNo(si, s.id)} {u.of} {total}</p>
           <h2 class="title">{s.title}</h2>
@@ -121,6 +110,17 @@ const u = brief.ui;
             </fieldset>
           ))}
         </section>
+        {hasCalendar && s.id === 'contact' && (
+          <section class="panel step booking" data-panel="step" data-step="booking" hidden>
+            <p class="kicker">{u.step} {total} {u.of} {total}</p>
+            <h2 class="title">{brief.booking.title}</h2>
+            <p class="lead">{brief.booking.text}</p>
+            <div class="cal" id="cal-inline" data-cal-inline></div>
+            <p class="booked" data-booked hidden></p>
+            <p class="err" role="alert" data-booking-err></p>
+            <button type="button" class="skip" data-skip>{brief.booking.skip} →</button>
+          </section>
+        )}
         </>
       ))}
 

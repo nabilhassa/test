@@ -83,7 +83,11 @@ const jsonLd = {
         },
         { rootMargin: '0px 0px -8% 0px', threshold: 0.12 },
       );
-      els.forEach((el) => io.observe(el));
+      els.forEach((el) => {
+        // the hero is the first thing people see: reveal it immediately instead of on scroll
+        if (el.closest('.hero')) requestAnimationFrame(() => el.classList.add('in'));
+        else io.observe(el);
+      });
     </script>
     <script>
       import '../scripts/fx';
